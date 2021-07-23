@@ -20,7 +20,7 @@
         <result column="modify_time" property="modifyTime" javaType="Date"/>
     </resultMap>
     <sql id="selectAll">
-        user_id,user_name,password,user_phone,user_role,user_remarks,create_time,modify_time
+        user_id,user_name,password,mobile_no,user_role,user_remarks,create_time,modify_time
     </sql>
     <insert id="saveUser" parameterType="cn.yugutou.reckoning.dao.entity.UsrInfo" >
         insert into usr_info values (#{userId},#{password},#{userName},#{mobileNo},#{userRole},#{userRemark},now(),now())
@@ -29,6 +29,6 @@
         select
         <include refid="selectAll"></include>
         from usr_info
-        where user_phone = #{mobileNo}
+        where mobile_no = #{mobileNo}
     </select>
 </mapper>
