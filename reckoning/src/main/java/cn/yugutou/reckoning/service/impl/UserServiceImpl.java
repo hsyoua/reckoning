@@ -28,6 +28,8 @@ public class UserServiceImpl implements UserService {
         Long userId = NumberGenerator.getNumber(9);
         System.out.println(userId);
         usrInfo.setUserId(userId);
+        //只能创建普通用户
+        usrInfo.setUserRole("02");
         UsrInfo queryUsrInfo = userMapper.queryUsrInfoByPhone(requset.getMobileNo());
         if(queryUsrInfo!=null){
             logger.info("user phone already exists");
