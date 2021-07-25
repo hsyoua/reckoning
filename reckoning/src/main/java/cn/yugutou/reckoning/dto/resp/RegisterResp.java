@@ -1,7 +1,6 @@
 package cn.yugutou.reckoning.dto.resp;
 
-import com.sun.deploy.net.HttpResponse;
-import com.sun.deploy.net.MessageHeader;
+
 import lombok.Data;
 
 import java.io.BufferedInputStream;
