@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace:填写映射当前的Mapper接口，所有的增删改查的参数和返回值类型，
+		就可以直接填写缩写，不区分大小写，直接通过方法名去找类型-->
+<mapper namespace="cn.yugutou.reckoning.dao.mapper.UserMapper">
+    <!-- sql:里面可以写入一个共同的sql代码，用于提取重复的代码。
+        要使用该代码的时候就直接使用<include>标签
+        id:为提取的sql代码，取一个id，起标识作用
+         -->
+    <resultMap id="BaseRsultMap" type="cn.yugutou.reckoning.dao.entity.UsrInfo">
+        <id column="user_id" property="userId" javaType="Integer"/>
+        <result column="password" property="password" javaType="String"/>
+        <result column="user_name" property="userName" javaType="String"/>
+        <result column="mobile_no" property="mobileNo" javaType="String"/>
+        <result column="user_role" property="userRole" javaType="String"/>
+        <result column="user_remark" property="userRemark" javaType="String"/>
+        <result column="create_time" property="createTime" javaType="Date"/>
+        <result column="modify_time" property="modifyTime" javaType="Date"/>
+    </resultMap>
+    <sql id="selectAll">
+        user_id,user_name,password,user_phone,user_role,user_remarks,create_time,modify_time
+    </sql>
+    <insert id="saveUser" parameterType="cn.yugutou.reckoning.dao.entity.UsrInfo" >
+        insert into usr_info values (#{userId},#{password},#{userName},#{mobileNo},#{userRole},#{userRemark},now(),now())
+    </insert>
+    <select id="queryUsrInfoByPhone" parameterType="java.lang.String" resultType="cn.yugutou.reckoning.dao.entity.UsrInfo">
+        select
+        <include refid="selectAll"></include>
+        from usr_info
+        where user_phone = #{mobileNo}
+    </select>
+</mapper>
