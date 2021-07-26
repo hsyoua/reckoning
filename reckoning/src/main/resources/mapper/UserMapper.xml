@@ -31,4 +31,7 @@
         from usr_info
         where mobile_no = #{mobileNo}
     </select>
+    <update id="updateLoginTime" parameterType="java.lang.Long">
+        update usr_info set last_login_time = now() and modify_time = now();
+    </update>
 </mapper>

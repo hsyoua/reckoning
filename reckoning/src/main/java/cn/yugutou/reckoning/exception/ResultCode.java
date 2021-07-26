@@ -22,7 +22,8 @@ public enum ResultCode {
     REQUEST_PARAM_ERROR(50002, "请求参数错误"),
 
     //用户模块错误码 50100~50199
-    USER_ALREAD_EXISTS(50100,"该手机用户已存在");
+    USER_ALREAD_EXISTS(50100,"该手机用户已存在"),
+    USER_LOGIN_CHECK_FAIL(50101,"The user does not exist or the password is incorrect");
     //流程模块错误码 50200~50299
     //订单模块错误码 50300~50399
 

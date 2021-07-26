@@ -10,6 +10,7 @@ CREATE TABLE `usr_info` (
                             `mobile_no` varchar(11) NOT NULL COMMENT '用户手机',
                             `user_role` varchar(2) NOT NULL COMMENT '用户角色：01-管理员、02-普通用户',
                             `user_remarks` varchar(300) DEFAULT NULL COMMENT '用户备注',
+                            `last_login_time` datetime DEFAULT NULL COMMONT '最后登录时间',
                             `create_time` datetime NOT NULL COMMENT '创建时间',
                             `modify_time` datetime NOT NULL COMMENT '修改时间',
                             PRIMARY KEY (`user_id`)

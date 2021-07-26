@@ -2,12 +2,14 @@ package cn.yugutou.reckoning.service.impl;
 
 import cn.yugutou.reckoning.dao.entity.UsrInfo;
 import cn.yugutou.reckoning.dao.mapper.UserMapper;
+import cn.yugutou.reckoning.dto.req.LoginReq;
 import cn.yugutou.reckoning.dto.req.RegisterReq;
 import cn.yugutou.reckoning.exception.CustomException;
 import cn.yugutou.reckoning.exception.ResultCode;
 import cn.yugutou.reckoning.service.UserService;
 import cn.yugutou.reckoning.utils.NumberGenerator;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -39,9 +41,18 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UsrInfo login(RegisterReq loginReq) {
-
-        return null;
+    public UsrInfo login(LoginReq loginReq) {
+        //query userInfo by mobileNo
+        log.debug("login user moblie no [{}]",loginReq.getMobileNo());
+        UsrInfo usrInfo =  userMapper.queryUsrInfoByPhone(loginReq.getMobileNo());
+        //check user login password
+        if(!StringUtils.equals(loginReq.getPassword(),usrInfo.getPassword())){
+            throw new CustomException(ResultCode.USER_LOGIN_CHECK_FAIL);
+        }
+        //update last login time;
+        userMapper.updateLoginTime(usrInfo.getUserId());
+        log.info("user login success!");
+        return usrInfo;
 
     }
 }
