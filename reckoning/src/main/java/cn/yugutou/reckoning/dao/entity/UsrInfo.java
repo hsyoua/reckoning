@@ -12,6 +12,7 @@ public class UsrInfo {
     private String mobileNo;
     private String userRole;
     private String userRemark;
+    private Date lastLoginTime;
     private Date createTime;
     private Date modifyTime;
 }
