@@ -9,7 +9,7 @@ public class usrBillAssociation {
     private Long associationId;
     private Long userId;
     private Long billingId;
-    private String user_participationType;
+    private String userParticipationType;
     private String paymentStatus;
     private Date createTime;
     private Date modifyTime;

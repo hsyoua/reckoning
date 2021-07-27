@@ -7,5 +7,5 @@ import java.io.Serializable;
 public class LoginResp implements Serializable {
     private String userName;
     private Long userId;
-    private String userRemark;
+    private String userRemarks;
 }

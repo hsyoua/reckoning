@@ -15,7 +15,7 @@
         <result column="user_name" property="userName" javaType="String"/>
         <result column="mobile_no" property="mobileNo" javaType="String"/>
         <result column="user_role" property="userRole" javaType="String"/>
-        <result column="user_remark" property="userRemark" javaType="String"/>
+        <result column="user_remarks" property="userRemarks" javaType="String"/>
         <result column="last_login_time" property="lastLoginTime" javaType="Date"/>
         <result column="create_time" property="createTime" javaType="Date"/>
         <result column="modify_time" property="modifyTime" javaType="Date"/>
