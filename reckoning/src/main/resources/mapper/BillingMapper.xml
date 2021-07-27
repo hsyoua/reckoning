@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace:填写映射当前的Mapper接口，所有的增删改查的参数和返回值类型，
+		就可以直接填写缩写，不区分大小写，直接通过方法名去找类型-->
+<mapper namespace="cn.yugutou.reckoning.dao.mapper.BillingMapper">
+    <!-- sql:里面可以写入一个共同的sql代码，用于提取重复的代码。
+        要使用该代码的时候就直接使用<include>标签
+        id:为提取的sql代码，取一个id，起标识作用
+         -->
+    <resultMap id="BaseRsultMap" type="cn.yugutou.reckoning.dao.entity.BillingInfo">
+        <id column="billing_id" property="billingId" javaType="Long"/>
+        <result column="amount" property="amount" javaType="BigDecimal"/>
+        <result column="people_num" property="peopleNum" javaType="Integer"/>
+        <result column="billing_status" property="billingStatus" javaType="String"/>
+        <result column="allocation_method" property="allocationMethod" javaType="String"/>
+        <!--<result column="apportioned_amount" property="apportionedAmount" javaType="BigDecimal"/>-->
+        <result column="consumption_notes" property="consumptionNotes" javaType="String"/>
+        <result column="consumer_address" property="consumerAddress" javaType="String"/>
+        <result column="dissipate" property="dissipate" javaType="Date"/>
+        <result column="create_time" property="createTime" javaType="Date"/>
+        <result column="modify_time" property="modifyTime" javaType="Date"/>
+    </resultMap>
+    <sql id="selectAll">
+        billing_id,amount,people_num,billing_status,allocation_method,consumption_notes,consumer_address,dissipate,create_time,modify_time
+    </sql>
+</mapper>

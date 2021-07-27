@@ -10,25 +10,29 @@
         id:为提取的sql代码，取一个id，起标识作用
          -->
     <resultMap id="BaseRsultMap" type="cn.yugutou.reckoning.dao.entity.UsrInfo">
-        <id column="user_id" property="userId" javaType="Integer"/>
+        <id column="user_id" property="userId" javaType="Long"/>
         <result column="password" property="password" javaType="String"/>
         <result column="user_name" property="userName" javaType="String"/>
         <result column="mobile_no" property="mobileNo" javaType="String"/>
         <result column="user_role" property="userRole" javaType="String"/>
-        <result column="user_remark" property="userRemark" javaType="String"/>
+        <result column="user_remarks" property="userRemarks" javaType="String"/>
+        <result column="last_login_time" property="lastLoginTime" javaType="Date"/>
         <result column="create_time" property="createTime" javaType="Date"/>
         <result column="modify_time" property="modifyTime" javaType="Date"/>
     </resultMap>
     <sql id="selectAll">
-        user_id,user_name,password,mobile_no,user_role,user_remarks,create_time,modify_time
+        user_id,user_name,password,mobile_no,user_role,user_remarks,last_login_time,create_time,modify_time
     </sql>
     <insert id="saveUser" parameterType="cn.yugutou.reckoning.dao.entity.UsrInfo" >
-        insert into usr_info values (#{userId},#{password},#{userName},#{mobileNo},#{userRole},#{userRemark},now(),now())
+        insert into usr_info values (#{userId},#{password},#{userName},#{mobileNo},#{userRole},#{userRemark},null,now(),now())
     </insert>
-    <select id="queryUsrInfoByPhone" parameterType="java.lang.String" resultType="cn.yugutou.reckoning.dao.entity.UsrInfo">
+    <select id="queryUsrInfoByPhone" parameterType="java.lang.String" resultMap="BaseRsultMap">
         select
         <include refid="selectAll"></include>
         from usr_info
         where mobile_no = #{mobileNo}
     </select>
+    <update id="updateLoginTime" parameterType="java.lang.Long">
+        update usr_info set last_login_time = now() , modify_time = now() where user_id = #{userId};
+    </update>
 </mapper>
