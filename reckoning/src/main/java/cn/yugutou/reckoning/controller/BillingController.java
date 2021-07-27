@@ -30,7 +30,7 @@ public class BillingController {
         boolean result= billService.addBill(billReq);
         List<UserBillAssociationReq> userBillAssociationReqs = billReq.getUserBillAssociationReqs();
 
-       log.info("controller 层 userid "+String.valueOf(userBillAssociationReqs.get(0)));
+       log.info("controller 层 userid"+String.valueOf(userBillAssociationReqs.get(0)));
         billService.addUserBillAssociation(userBillAssociationReqs);
         AddBillResp resp = new AddBillResp();
         resp.setResult(result);
