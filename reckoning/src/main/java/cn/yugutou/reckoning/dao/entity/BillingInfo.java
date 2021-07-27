@@ -12,11 +12,10 @@ public class BillingInfo {
     private Integer peopleNum;
     private String billingStatus;
     private String allocationMethod;
-    private String apportionedAmount;
     private String consumptionNotes;
     private String consumerAddress;
     private Date dissipate;
     private Date createTime;
     private Date modifyTime;
-
+    private Long createUserId;
 }
