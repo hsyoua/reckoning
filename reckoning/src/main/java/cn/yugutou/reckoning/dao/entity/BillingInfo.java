@@ -6,10 +6,10 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 @Data
-public class billingInfo {
+public class BillingInfo {
     private Long billingId;
     private BigDecimal amount;
-    private Long peopleNum;
+    private Integer peopleNum;
     private String billingStatus;
     private String allocationMethod;
     private String apportionedAmount;

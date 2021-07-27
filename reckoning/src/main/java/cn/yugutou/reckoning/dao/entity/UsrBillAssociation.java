@@ -5,7 +5,7 @@ import lombok.Data;
 import java.util.Date;
 
 @Data
-public class usrBillAssociation {
+public class UsrBillAssociation {
     private Long associationId;
     private Long userId;
     private Long billingId;
