@@ -10,4 +10,5 @@ import org.springframework.stereotype.Repository;
 public interface UserMapper {
     boolean saveUser(UsrInfo usrInfo);
     UsrInfo queryUsrInfoByPhone(@Param("mobileNo") String mobileNo);
+    void updateLoginTime(Long userId);
 }

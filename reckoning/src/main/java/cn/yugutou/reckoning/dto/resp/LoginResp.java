@@ -6,6 +6,6 @@ import java.io.Serializable;
 @Data
 public class LoginResp implements Serializable {
     private String userName;
-    private String userId;
-    private String userRemark;
+    private Long userId;
+    private String userRemarks;
 }
