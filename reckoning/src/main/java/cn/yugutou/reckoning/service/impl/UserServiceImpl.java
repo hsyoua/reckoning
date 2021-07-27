@@ -22,6 +22,8 @@ import org.springframework.stereotype.Service;
 public class UserServiceImpl implements UserService {
     @Autowired
     private UserMapper userMapper;
+
+
     public static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
     @Override
     public boolean registerUser(RegisterReq requset) {

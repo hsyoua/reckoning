@@ -1,12 +1,14 @@
 package cn.yugutou.reckoning.dao.entity;
 
 import lombok.Data;
+import org.apache.ibatis.type.Alias;
 
 import java.math.BigDecimal;
 import java.util.Date;
 
 @Data
-public class UsrBillAssociation {
+@Alias("userBill")
+public class UserBillAssciotionEntity {
     private Long associationId;
     private Long userId;
     private Long billingId;

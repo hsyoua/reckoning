@@ -4,6 +4,7 @@ import lombok.Data;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 @Data
 public class BillingInfo {
@@ -18,4 +19,5 @@ public class BillingInfo {
     private Date createTime;
     private Date modifyTime;
     private Long createUserId;
+    //private List<UsrBillAssociation>  UsrBillAssociations;
 }
