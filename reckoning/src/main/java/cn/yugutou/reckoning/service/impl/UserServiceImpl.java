@@ -5,11 +5,13 @@ import cn.yugutou.reckoning.dao.mapper.UserMapper;
 import cn.yugutou.reckoning.dto.req.LoginReq;
 import cn.yugutou.reckoning.dto.req.QueryUserReq;
 import cn.yugutou.reckoning.dto.req.RegisterReq;
+import cn.yugutou.reckoning.dto.resp.LoginResp;
 import cn.yugutou.reckoning.exception.CustomException;
 import cn.yugutou.reckoning.exception.ResultCode;
 import cn.yugutou.reckoning.service.UserService;
 import cn.yugutou.reckoning.utils.CheckUtil;
 import cn.yugutou.reckoning.utils.NumberGenerator;
+import lombok.extern.java.Log;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -36,6 +38,8 @@ public class UserServiceImpl implements UserService {
         Long userId = NumberGenerator.getNumber(9);
         System.out.println(userId);
         usrInfo.setUserId(userId);
+        usrInfo.setUserStatus("01");
+        usrInfo.setPasswordErrorNum(0);
         //只能创建普通用户
         usrInfo.setUserRole("02");
         UsrInfo queryUsrInfo = userMapper.queryUsrInfoByPhone(requset.getMobileNo());
@@ -47,18 +51,32 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UsrInfo login(LoginReq loginReq) {
+    public LoginResp login(LoginReq loginReq) {
         //query userInfo by mobileNo
         log.debug("login user moblie no [{}]",loginReq.getMobileNo());
         UsrInfo usrInfo =  userMapper.queryUsrInfoByPhone(loginReq.getMobileNo());
+        //check user status
+        if(!"01".equals(usrInfo.getUserStatus())) {
+            throw new CustomException(ResultCode.USER_STATUS_EXCEPTION);
+        }
         //check user login password
         if(!StringUtils.equals(loginReq.getPassword(),usrInfo.getPassword())){
+            Integer errorNum = usrInfo.getPasswordErrorNum();
+            if(++errorNum>=5){
+                //update userStatus frozen
+                userMapper.frozenStatusById(usrInfo.getUserId(),errorNum);
+            }else {
+                //update errorNum
+                userMapper.updateErrorNumById(usrInfo.getUserId(),errorNum);
+            }
             throw new CustomException(ResultCode.USER_LOGIN_CHECK_FAIL);
         }
         //update last login time;
         userMapper.updateLoginTime(usrInfo.getUserId());
         log.info("user login success!");
-        return usrInfo;
+        LoginResp loginResp = new LoginResp();
+        BeanUtils.copyProperties(usrInfo,loginResp);
+        return loginResp;
 
     }
 
