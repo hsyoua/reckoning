@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 
 @RequestMapping("/user")
 @RestController
-@Validated
 @Slf4j
 public class UserController {
 
@@ -35,7 +34,7 @@ public class UserController {
     }
 
     @PostMapping(value = "/login",produces = "application/json;charset=UTF-8")
-    public ResponseEntity<LoginResp> login(@RequestBody LoginReq loginReq){
+    public ResponseEntity<LoginResp> login(@RequestBody @Validated LoginReq loginReq){
         log.info("login request is [{}]",loginReq);
         UsrInfo usrInfo = userService.login(loginReq);
         LoginResp loginResp = new LoginResp();
