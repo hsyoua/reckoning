@@ -27,16 +27,14 @@ public class BillingController {
 
     @PostMapping(value = "/addBill",produces = "application/json;charset=UTF-8")
     public ResponseEntity<LoginResp> login(@RequestBody BillReq billReq){
-        boolean result= billService.addBill(billReq);
+        //insert into billingInfo table
+        Long billid= billService.addBill(billReq);
+        //get participating user information list
         List<UserBillAssociationReq> userBillAssociationReqs = billReq.getUserBillAssociationReqs();
-
-       log.info("controller 层 userid"+String.valueOf(userBillAssociationReqs.get(0)));
-        billService.addUserBillAssociation(userBillAssociationReqs);
-        AddBillResp resp = new AddBillResp();
-        resp.setResult(result);
-        if (!result){
-            return new ResponseEntity(resp, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        log.info("participating user information list [{}]",userBillAssociationReqs);
+        //insert into billAssociation table
+        billService.addUserBillAssociation(userBillAssociationReqs,billid,billReq.getAmount());
+        AddBillResp resp = new AddBillResp(billid);
         return new ResponseEntity(resp,HttpStatus.OK);
     }
 

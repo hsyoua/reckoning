@@ -16,13 +16,12 @@ public class BillReq implements Serializable {
     private Integer peopleNum;
     @NotBlank(message = "The  amount cannot be empty")
     private BigDecimal amount;
-    @NotBlank(message = "The billing_status no cannot be empty")
-    private String billingStatus;
     private String allocationMethod;
     private String consumptionNotes;
     private String consumerAddress;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date dissipate;
+    private Long createUserId;
 
     private List<UserBillAssociationReq>  userBillAssociationReqs;
 }
