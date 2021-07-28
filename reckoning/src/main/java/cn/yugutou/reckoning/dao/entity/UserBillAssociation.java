@@ -8,7 +8,7 @@ import java.util.Date;
 
 @Data
 @Alias("userBill")
-public class UserBillAssciotionEntity {
+public class UserBillAssociation {
     private Long associationId;
     private Long userId;
     private Long billingId;

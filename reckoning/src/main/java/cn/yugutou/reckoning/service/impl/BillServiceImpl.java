@@ -1,7 +1,7 @@
 package cn.yugutou.reckoning.service.impl;
 
 import cn.yugutou.reckoning.dao.entity.BillingInfo;
-import cn.yugutou.reckoning.dao.entity.UserBillAssciotionEntity;
+import cn.yugutou.reckoning.dao.entity.UserBillAssociation;
 import cn.yugutou.reckoning.dao.mapper.BillingMapper;
 import cn.yugutou.reckoning.dao.mapper.UserBillAssociationMapper;
 import cn.yugutou.reckoning.dto.req.BillReq;
@@ -42,19 +42,19 @@ public class BillServiceImpl implements BillService {
 
     @Override
     public boolean addUserBillAssociation(List<UserBillAssociationReq> userBillAssociationReqs) {
-        ArrayList<UserBillAssciotionEntity> userBillAssciotionEntities = new ArrayList<>();
+        ArrayList<UserBillAssociation> userBillAssociations = new ArrayList<>();
         //获取账单用户关联表id
 
         for (UserBillAssociationReq userBillAssociationReq : userBillAssociationReqs) {
-            UserBillAssciotionEntity assciotionEntity = new UserBillAssciotionEntity();
-            BeanUtils.copyProperties(userBillAssociationReq,assciotionEntity);
+            UserBillAssociation userBillAssociation = new UserBillAssociation();
+            BeanUtils.copyProperties(userBillAssociationReq,userBillAssociation);
             long userbillid = NumberGenerator.getNumber(9);
-            assciotionEntity.setAssociationId(userbillid);
-            assciotionEntity.setBillingId(billid);
-            userBillAssciotionEntities.add(assciotionEntity);
-            log.info("assciotionEntity.getUserId()的值"+assciotionEntity.getUserId());
+            userBillAssociation.setAssociationId(userbillid);
+            userBillAssociation.setBillingId(billid);
+            userBillAssociations.add(userBillAssociation);
+            log.info("assciotionEntity.getUserId()的值"+userBillAssociation.getUserId());
         }
-        return userBillAssociationMapper.addUserBillAssociation(userBillAssciotionEntities);
+        return userBillAssociationMapper.addUserBillAssociation(userBillAssociations);
     }
 
 
