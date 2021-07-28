@@ -8,6 +8,11 @@ import org.springframework.stereotype.Repository;
 @Repository
 @Mapper
 public interface UserMapper {
+    /**
+     * 添加用户
+     * @param usrInfo
+     * @return
+     */
     boolean saveUser(UsrInfo usrInfo);
     UsrInfo queryUsrInfoByPhone(@Param("mobileNo") String mobileNo);
     void updateLoginTime(Long userId);
