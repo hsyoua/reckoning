@@ -30,15 +30,17 @@ public class BillServiceImpl implements BillService {
     private UserBillAssociationMapper userBillAssociationMapper;
 
     private final  static String  DEFAULT_PAYMENT_STATUS = "01";
+    private  final  static  String DEFAULT_BILLING_STATUS = "01";
 
     @Override
     public Long addBill(BillReq billReq) {
         BillingInfo billingInfo = new BillingInfo();
         BeanUtils.copyProperties(billReq,billingInfo);
         //获取账单id
-        Long billid = NumberGenerator.getNumber(12);
+        long billid = NumberGenerator.getNumber(12);
+
         billingInfo.setBillingId(billid);
-        log.info("billingInfo的值"+billingInfo);
+        billingInfo.setBillingStatus(DEFAULT_BILLING_STATUS);
         billingMapper.addBill(billingInfo);
         return  billid;
     }
@@ -47,6 +49,7 @@ public class BillServiceImpl implements BillService {
     public boolean addUserBillAssociation(List<UserBillAssociationReq> userBillAssociationReqs,Long billid,BigDecimal amount) {
         ArrayList<UserBillAssociation> userBillAssociations = new ArrayList<>();
         //calculate apportionment amount
+        /*每人均摊*/
         BigDecimal apportionedAmount = amount.divide(BigDecimal.valueOf(userBillAssociationReqs.size()));
         log.info("default allocation method is 'AA' ，apportioned amount is : {}",apportionedAmount);
         //check participating user information

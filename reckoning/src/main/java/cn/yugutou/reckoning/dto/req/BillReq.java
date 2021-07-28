@@ -22,7 +22,6 @@ public class BillReq implements Serializable {
     private Long createUserId;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date dissipate;
-    private Long createUserId;
 
     private List<UserBillAssociationReq>  userBillAssociationReqs;
 }
