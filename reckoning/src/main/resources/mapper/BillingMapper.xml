@@ -23,6 +23,53 @@
         <result column="modify_time" property="modifyTime" javaType="Date"/>
     </resultMap>
     <sql id="selectAll">
-        billing_id,amount,people_num,billing_status,allocation_method,consumption_notes,consumer_address,dissipate,create_time,modify_time
+        billing_id
+        ,amount,people_num,billing_status,allocation_method,consumption_notes,consumer_address,dissipate,create_time,modify_time
     </sql>
+
+    <!--新增账单-->
+    <insert id="addBill" parameterType="cn.yugutou.reckoning.dao.entity.BillingInfo">
+        insert into billing_info values
+        (#{billingId},#{amount},#{peopleNum},#{billingStatus},#{allocationMethod},#{consumptionNotes},#{consumerAddress},null,#{dissipate},now(),now());
+          /*获取插入数据的主键*/
+<!--        <selectKey keyProperty="billingId" order="AFTER"  resultType="java.lang.Long">-->
+<!--            select LAST_INSERT_ID()-->
+<!--        </selectKey>-->
+    </insert>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
 </mapper>
