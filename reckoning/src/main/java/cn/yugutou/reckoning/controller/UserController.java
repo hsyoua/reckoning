@@ -25,6 +25,7 @@ public class UserController {
 
     @PostMapping(value = "/register",produces="application/json;charset=UTF-8")
     public ResponseEntity<RegisterResp> registerUser(@RequestBody @Validated RegisterReq requset){
+        System.out.println(requset);
         boolean result = userService.registerUser(requset);
         RegisterResp resp = new RegisterResp();
         resp.setResult(result);
