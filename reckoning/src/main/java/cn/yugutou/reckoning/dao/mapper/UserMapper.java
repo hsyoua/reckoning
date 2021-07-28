@@ -30,6 +30,9 @@ public interface UserMapper {
      */
     List<UsrInfo> queryUserByNamePhone(UsrInfo user);
 
+    Integer queryCountByNamePhone(UsrInfo user);
 
     boolean updateUserPassword(UpdatePassReq updatePassReq);
+
+
 }

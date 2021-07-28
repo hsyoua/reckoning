@@ -22,6 +22,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -83,7 +84,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UsrInfo> queryUserByNamePhone(QueryUserReq queryUserReq) {
+    public List queryUserByNamePhone(QueryUserReq queryUserReq) {
         UsrInfo usrInfo = new UsrInfo();
         String keyWord = queryUserReq.getKeyWord();
         BeanUtils.copyProperties(queryUserReq,usrInfo);
@@ -99,10 +100,12 @@ public class UserServiceImpl implements UserService {
         if (pageSize>50){
           throw new CustomException(ResultCode.user_pagesize_max);
         }
-
-        log.info("pageNo,pageSize"+usrInfo.getPageNo()+","+usrInfo.getPageSize());
+        ArrayList newUserInfos = new ArrayList();
         List<UsrInfo> usrInfos = userMapper.queryUserByNamePhone(usrInfo);
-        return usrInfos;
+        Integer userCount = userMapper.queryCountByNamePhone(usrInfo);
+        newUserInfos.add(usrInfos);
+        newUserInfos.add(userCount);
+        return newUserInfos;
     }
 
     @Override

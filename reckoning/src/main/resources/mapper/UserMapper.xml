@@ -62,6 +62,22 @@
         </where>
     </select>
 
+<!--查询模糊查询的条数-->
+    <select id="queryCountByNamePhone" parameterType="cn.yugutou.reckoning.dao.entity.UsrInfo" resultType="int">
+
+        select
+        count(*)
+        from usr_info
+        <where>
+            <if test="userName !=null and userName != ''">
+                and user_name like '%${userName}%'
+            </if>
+            <if test="mobileNo !=null and mobileNo != ''">
+                or mobile_no like '%${mobileNo}%'
+            </if>
+        </where>
+    </select>
+
 
 <!--    修改密码-->
     <update id="updateUserPassword" parameterType="cn.yugutou.reckoning.dto.req.UpdatePassReq">

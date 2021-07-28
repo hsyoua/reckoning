@@ -5,10 +5,7 @@ import cn.yugutou.reckoning.dto.req.LoginReq;
 import cn.yugutou.reckoning.dto.req.QueryUserReq;
 import cn.yugutou.reckoning.dto.req.RegisterReq;
 import cn.yugutou.reckoning.dto.req.UpdatePassReq;
-import cn.yugutou.reckoning.dto.resp.LoginResp;
-import cn.yugutou.reckoning.dto.resp.QueryUserResp;
-import cn.yugutou.reckoning.dto.resp.RegisterResp;
-import cn.yugutou.reckoning.dto.resp.UpdatePassResp;
+import cn.yugutou.reckoning.dto.resp.*;
 import cn.yugutou.reckoning.exception.Result;
 import cn.yugutou.reckoning.service.UserService;
 import lombok.extern.slf4j.Slf4j;
@@ -60,16 +57,19 @@ public class UserController {
 
         pageNo=(pageNo-1)*pageSize;
         queryUserReq.setPageNo(pageNo);
-        List<UsrInfo> usrInfos = userService.queryUserByNamePhone(queryUserReq);
+        List   newUsrInfos = userService.queryUserByNamePhone(queryUserReq);
         ArrayList<QueryUserResp> queryUserResps = new ArrayList<>();
-        for (UsrInfo usrInfo : usrInfos) {
+        List<UsrInfo> UsrInfos = (List<UsrInfo>) newUsrInfos.get(0);
+        QueryUserAndTotalResp queryUserAndTotalResp = new QueryUserAndTotalResp();
+        for (UsrInfo usrInfo : UsrInfos) {
             QueryUserResp queryUserResp = new QueryUserResp();
             BeanUtils.copyProperties(usrInfo,queryUserResp);
             queryUserResps.add(queryUserResp);
         }
+        queryUserAndTotalResp.setQueryUserResps(queryUserResps);
+        queryUserAndTotalResp.setTotalNum((Integer) newUsrInfos.get(1));
 
-        System.out.println(queryUserResps);
-        return new ResponseEntity(queryUserResps,HttpStatus.OK);
+        return new ResponseEntity(queryUserAndTotalResp,HttpStatus.OK);
     }
 
 
