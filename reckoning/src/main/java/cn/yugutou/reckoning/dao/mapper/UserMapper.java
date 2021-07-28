@@ -15,5 +15,7 @@ public interface UserMapper {
      */
     boolean saveUser(UsrInfo usrInfo);
     UsrInfo queryUsrInfoByPhone(@Param("mobileNo") String mobileNo);
+    void frozenStatusById(@Param("userId") Long userId,@Param("errorNum") Integer errorNum);
+    void updateErrorNumById(@Param("userId") Long userId,@Param("errorNum") Integer errorNum);
     void updateLoginTime(Long userId);
 }

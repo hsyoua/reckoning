@@ -36,9 +36,7 @@ public class UserController {
     @PostMapping(value = "/login",produces = "application/json;charset=UTF-8")
     public ResponseEntity<LoginResp> login(@RequestBody @Validated LoginReq loginReq){
         log.info("login request is [{}]",loginReq);
-        UsrInfo usrInfo = userService.login(loginReq);
-        LoginResp loginResp = new LoginResp();
-        BeanUtils.copyProperties(usrInfo,loginResp);
+        LoginResp loginResp = userService.login(loginReq);
         return new ResponseEntity<>(loginResp,HttpStatus.OK);
     };
 }

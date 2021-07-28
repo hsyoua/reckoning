@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,7 +30,7 @@ public class BillingController {
    private BillService billService;
 
     @PostMapping(value = "/addBill",produces = "application/json;charset=UTF-8")
-    public ResponseEntity<LoginResp> login(@RequestBody BillReq billReq){
+    public ResponseEntity<LoginResp> login(@Validated @RequestBody BillReq billReq){
         long billid= billService.addBill(billReq);
         List<UserBillAssociationReq> userBillAssociationReqs = billReq.getUserBillAssociationReqs();
         BigDecimal amount = billReq.getAmount();
