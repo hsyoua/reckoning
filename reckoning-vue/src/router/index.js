@@ -5,12 +5,12 @@ import login from '../views/Login'
 Vue.use(VueRouter)
 
 const routes = [{
-    path: '/login',
+    path: '/',
     name: 'login',
     component: login
   },
   {
-    path: '//',
+    path: '/home',
     name:'home',
     component: () => import('@/views'),
     meta: {
@@ -19,12 +19,12 @@ const routes = [{
     redirect: 'index',
     children: [
       {
-        path: 'index',
+        path: '/index',
         name: 'index',
         component: () => import('@/views/Home'),
       },
       {
-        path: 'compoment1',
+        path: '/compoment1',
         name: 'compoment1',
         component: () => import('@/views/compoments/compoment1'),
         meta: {
@@ -32,7 +32,7 @@ const routes = [{
         },
       },
       {
-        path: 'compoment2',
+        path: '/compoment2',
         name: 'compoment2',
         component: () => import('@/views/compoments/compoment2'),
         meta: {

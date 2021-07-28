@@ -4,9 +4,9 @@
     <div class="from" v-if="show">
       <h3>欢迎登录</h3>
       <el-form ref="loginForm" :model="loginForm" :rules="rules">
-        账号
-        <el-form-item prop="userName">
-          <el-input v-model="loginForm.userName" class="input" placeholder="请输入账号" />
+        手机号
+        <el-form-item prop="mobileNo">
+          <el-input v-model="loginForm.mobileNo" class="input" placeholder="请输入账号" />
         </el-form-item>
         密码
         <el-form-item prop="password">
@@ -23,15 +23,15 @@
     <div class="from" v-else>
       <h3>欢迎注册</h3>
       <el-form ref="userForm" :model="userForm" :rules="rules">
-        账号
+        用户名
         <el-form-item prop="userName">
           <el-input v-model="userForm.userName" class="input" placeholder="请输入账号" />
         </el-form-item>
         密码
         <el-form-item prop="password">
-          <el-input v-model="userForm.password" class="input" placeholder="请输入密码" />
+          <el-input v-model="userForm.password" class="input" placeholder="请输入密码" type="password" />
         </el-form-item>
-        手机
+        手机号
         <el-form-item prop="mobileNo">
           <el-input v-model="userForm.mobileNo" class="input" placeholder="请输入手机号" />
         </el-form-item>
@@ -45,13 +45,16 @@
         <el-form-item>
           <el-button bordered class="btn" @click="resetForm('userForm')">重置</el-button>
         </el-form-item>
+        <el-form-item>
+          <el-button bordered class="btn" @click="addUser">登录</el-button>
+        </el-form-item>
       </el-form>
     </div>
   </div>
 </template>
 
 <script>
-import { setNewUser, userLogin } from "@/api";
+import Api from "@/api";
 
 export default {
   data() {
@@ -81,7 +84,7 @@ export default {
     return {
       show: true,
       loginForm: {
-        userName: "",
+        mobileNo: "",
         password: "",
       },
       userForm: {
@@ -103,16 +106,19 @@ export default {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           if (formName === "userForm") {
-            setNewUser(this.userForm).then((res) => {
-              console.log(res);
+            Api.setNewUser(this.userForm).then((res) => {
+              if (res.code === 50001) {
+                this.$message.error(res.message);
+              }
             });
           }
           if (formName === "loginForm") {
-            userLogin(this.loginForm).then((res) => {
-              console.log(res);
+            Api.userLogin(this.loginForm).then((res) => {
+              if (res.code === 50001) {
+                this.$message.error(res.message);
+              }
             });
           }
-          alert("submit!");
         } else {
           console.log("error submit!!");
           return false;

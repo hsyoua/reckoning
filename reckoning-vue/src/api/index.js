@@ -1,6 +1,6 @@
 import service from '@/service/index'
 
-export const setNewUser = (param) => {
+const setNewUser = (param) => {
   return service({
     url: '/user/register',
     method: 'POST',
@@ -8,10 +8,17 @@ export const setNewUser = (param) => {
   })
 }
 
-export const userLogin = (param) => {
+const userLogin = (param) => {
   return service({
     url: '/user/login',
     method: 'POST',
     data: param,
   })
 }
+
+let Api = {
+  setNewUser,
+  userLogin
+}
+
+export default Api;

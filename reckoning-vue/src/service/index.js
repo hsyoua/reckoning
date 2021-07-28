@@ -1,11 +1,12 @@
 import axios from 'axios'
 
 const http = axios.create({
-  baseURL: 'http://192.168.1.94:8081',
+  baseURL: process.env.NODE_ENV === 'development' ? '/api' : '/',
   headers: {
       'Content-Type': 'application/json',
   },
 })
+
 
 // 添加请求拦截器
 http.interceptors.request.use(function (config) {

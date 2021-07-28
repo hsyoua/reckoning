@@ -30,7 +30,7 @@
       </el-submenu> -->
 
       <!-- 固定菜单 -->
-      <el-menu-item index="/">
+      <el-menu-item index="/home">
         <i class="el-icon-s-home"></i>
         <span slot="title">首页</span>
       </el-menu-item>
