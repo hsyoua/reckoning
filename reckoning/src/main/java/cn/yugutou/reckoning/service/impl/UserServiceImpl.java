@@ -95,6 +95,11 @@ public class UserServiceImpl implements UserService {
 
             usrInfo.setUserName(keyWord);
 
+        Integer pageSize = queryUserReq.getPageSize();
+        if (pageSize>50){
+          throw new CustomException(ResultCode.user_pagesize_max);
+        }
+
         log.info("pageNo,pageSize"+usrInfo.getPageNo()+","+usrInfo.getPageSize());
         List<UsrInfo> usrInfos = userMapper.queryUserByNamePhone(usrInfo);
         return usrInfos;

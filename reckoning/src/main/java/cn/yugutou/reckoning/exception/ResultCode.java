@@ -28,6 +28,7 @@ public enum ResultCode {
     USER_OLDPASSWORD_ERROR(50103,"原始密码输入错误，请重新输入"),
     USER_NEWPASSWORD_ERROR(50104,"新密码与原始密码相同，无法修改"),
     USER_CONFIRMPASSWORD_ERROR(50105,"确认密码与新密码不一致，请修改"),
+    user_pagesize_max(50106,"查询失败，查询条数最多50条"),
     //流程模块错误码 50200~50299
     //账单模块错误码 50300~50399
     BILL_PARAMETER_BE_EMPTY(50300,"Billing participating user information cannot be blank");

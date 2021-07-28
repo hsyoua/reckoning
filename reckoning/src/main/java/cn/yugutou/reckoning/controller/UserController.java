@@ -56,6 +56,8 @@ public class UserController {
         //获取输入的起始页数，做转换后再封装
         Integer pageNo = queryUserReq.getPageNo();
         Integer pageSize = queryUserReq.getPageSize();
+
+
         pageNo=(pageNo-1)*pageSize;
         queryUserReq.setPageNo(pageNo);
         List<UsrInfo> usrInfos = userService.queryUserByNamePhone(queryUserReq);
