@@ -31,6 +31,10 @@
         <el-form-item prop="password">
           <el-input v-model="userForm.password" class="input" placeholder="请输入密码" type="password" />
         </el-form-item>
+        确认密码
+        <el-form-item prop="checkPass">
+          <el-input type="password" v-model="userForm.checkPass" autocomplete="off"></el-input>
+        </el-form-item>
         手机号
         <el-form-item prop="mobileNo">
           <el-input v-model="userForm.mobileNo" class="input" placeholder="请输入手机号" />
@@ -72,10 +76,20 @@ export default {
         callback();
       }
     };
-
     var validateMobile = (rule, value, callback) => {
+      let regPhone = /^1[3456789]{1}\d{9}$/;
+      if (value === ("" || null)) {
+        callback(Error("手机号码不能为空"));
+      } else if (!regPhone.test(value)) {
+        callback(Error("手机号格式错误"));
+      }
+      callback();
+    };
+    var validatePass2 = (rule, value, callback) => {
       if (value === "") {
-        callback(new Error("请输入密码"));
+        callback(new Error("请再次输入密码"));
+      } else if (value !== this.userForm.password) {
+        callback(new Error("两次输入密码不一致!"));
       } else {
         callback();
       }
@@ -90,6 +104,7 @@ export default {
       userForm: {
         userName: "",
         password: "",
+        checkPass: "",
         mobileNo: "",
         userRemarks: "",
       },
@@ -97,27 +112,37 @@ export default {
         userName: [{ validator: validateUser, trigger: "blur" }],
         password: [{ validator: validatePass, trigger: "blur" }],
         mobileNo: [{ validator: validateMobile, trigger: "blur" }],
+        checkPass: [{ validator: validatePass2, trigger: "blur" }],
       },
     };
   },
   methods: {
+    //登录校验
     submitForm(formName) {
       // console.log(formName)
       this.$refs[formName].validate((valid) => {
         if (valid) {
+          //用户注册
           if (formName === "userForm") {
             Api.setNewUser(this.userForm).then((res) => {
-              if (res.code === 50001) {
+              console.log(res);
+              if (res.data.code === 50001) {
                 this.$message.error(res.message);
+              }
+              if (res.data.result) {
+                this.$message({
+                  message: "注册成功",
+                  type: "success",
+                });
+                this.loginForm.mobileNo = this.userForm.mobileNo;
+                this.loginForm.password = this.userForm.password;
+                this.userGetLogin(this.loginForm);
               }
             });
           }
+          //用户登录
           if (formName === "loginForm") {
-            Api.userLogin(this.loginForm).then((res) => {
-              if (res.code === 50001) {
-                this.$message.error(res.message);
-              }
-            });
+            this.userGetLogin(this.loginForm);
           }
         } else {
           console.log("error submit!!");
@@ -125,11 +150,32 @@ export default {
         }
       });
     },
+    //切换登录或注册
     addUser() {
       this.show = false;
     },
+    //重置注册信息
     resetForm(formName) {
       this.$refs[formName].resetFields();
+    },
+    //用户登录方法
+    userGetLogin(val) {
+      Api.userLogin(val).then((res) => {
+        console.log(res);
+        if (res.data.code === 50001) {
+          this.$message.error("用户不存在");
+        }
+        if (res.data.code === 50101) {
+          this.$message.error("密码错误，请重新输入");
+        }
+        if (res.data.userName) {
+          this.$message({
+            message: "登录成功",
+            type: "success",
+          });
+          this.$router.push("/home");
+        }
+      });
     },
   },
 };
