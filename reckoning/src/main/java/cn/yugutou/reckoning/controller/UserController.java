@@ -2,8 +2,10 @@ package cn.yugutou.reckoning.controller;
 
 import cn.yugutou.reckoning.dao.entity.UsrInfo;
 import cn.yugutou.reckoning.dto.req.LoginReq;
+import cn.yugutou.reckoning.dto.req.QueryUserReq;
 import cn.yugutou.reckoning.dto.req.RegisterReq;
 import cn.yugutou.reckoning.dto.resp.LoginResp;
+import cn.yugutou.reckoning.dto.resp.QueryUserResp;
 import cn.yugutou.reckoning.dto.resp.RegisterResp;
 import cn.yugutou.reckoning.service.UserService;
 import lombok.extern.slf4j.Slf4j;
@@ -13,6 +15,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @RequestMapping("/user")
 @RestController
@@ -42,4 +47,26 @@ public class UserController {
         BeanUtils.copyProperties(usrInfo,loginResp);
         return new ResponseEntity<>(loginResp,HttpStatus.OK);
     };
+
+
+    //通过用户名或者手机号模糊查询用户
+    @PostMapping(value = "/queryUser",produces = "application/json;charset=UTF-8")
+    public ResponseEntity<QueryUserResp> login(@RequestBody @Validated QueryUserReq queryUserReq){
+        log.info("controller pageNo and pageSize :"+ queryUserReq.getPageNo()+","+queryUserReq.getPageSize());
+        //获取输入的起始页数，做转换后再封装
+        Integer pageNo = queryUserReq.getPageNo();
+        Integer pageSize = queryUserReq.getPageSize();
+        pageNo=(pageNo-1)*pageSize;
+        queryUserReq.setPageNo(pageNo);
+        List<UsrInfo> usrInfos = userService.queryUserByNamePhone(queryUserReq);
+        ArrayList<QueryUserResp> queryUserResps = new ArrayList<>();
+        for (UsrInfo usrInfo : usrInfos) {
+            QueryUserResp queryUserResp = new QueryUserResp();
+            BeanUtils.copyProperties(usrInfo,queryUserResp);
+            queryUserResps.add(queryUserResp);
+        }
+
+        System.out.println(queryUserResps);
+        return new ResponseEntity(queryUserResps,HttpStatus.OK);
+    }
 }

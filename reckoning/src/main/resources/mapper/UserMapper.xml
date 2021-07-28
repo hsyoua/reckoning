@@ -21,10 +21,12 @@
         <result column="modify_time" property="modifyTime" javaType="Date"/>
     </resultMap>
     <sql id="selectAll">
-        user_id,user_name,password,mobile_no,user_role,user_remarks,last_login_time,create_time,modify_time
+        user_id
+        ,user_name,password,mobile_no,user_role,user_remarks,last_login_time,create_time,modify_time
     </sql>
-    <insert id="saveUser" parameterType="cn.yugutou.reckoning.dao.entity.UsrInfo" >
-        insert into usr_info values (#{userId},#{password},#{userName},#{mobileNo},#{userRole},#{userRemarks},null,now(),now())
+    <insert id="saveUser" parameterType="cn.yugutou.reckoning.dao.entity.UsrInfo">
+        insert into usr_info
+        values (#{userId}, #{password}, #{userName}, #{mobileNo}, #{userRole}, #{userRemarks}, null, now(), now())
     </insert>
     <select id="queryUsrInfoByPhone" parameterType="java.lang.String" resultMap="BaseRsultMap">
         select
@@ -33,6 +35,26 @@
         where mobile_no = #{mobileNo}
     </select>
     <update id="updateLoginTime" parameterType="java.lang.Long">
-        update usr_info set last_login_time = now() , modify_time = now() where user_id = #{userId};
+        update usr_info
+        set last_login_time = now(),
+            modify_time     = now()
+        where user_id = #{userId};
     </update>
+    <!--对用户名和手机号进行模糊查询-->
+    <select id="queryUserByNamePhone" parameterType="cn.yugutou.reckoning.dao.entity.UsrInfo" resultMap="BaseRsultMap">
+
+        select
+        <include refid="selectAll"></include>
+        from usr_info
+        <where>
+            <if test="userName !=null and userName != ''">
+                and user_name like '%${userName}%'
+            </if>
+            <if test="mobileNo !=null and mobileNo != ''">
+                or mobile_no like '%${mobileNo}%'
+            </if>
+               limit
+                #{pageNo} , #{pageSize}
+        </where>
+    </select>
 </mapper>

@@ -19,4 +19,5 @@ public class BillingInfo {
     private Date createTime;
     private Date modifyTime;
     private Long createUserId;
+    private String billTheme;
 }

@@ -64,4 +64,18 @@ public class CheckUtil {
             return false;
         }
     }
+
+    /**
+     * 校验接收的参数是不是数字
+     * @param str
+     * @return
+     */
+    public static boolean isNumeric(String str) {
+        for (int i = 0; i < str.length(); i++) {
+            if(!Character.isDigit(str.charAt(i))){
+                return false;
+            }
+        }
+        return true;
+    }
 }

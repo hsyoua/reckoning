@@ -2,9 +2,11 @@ package cn.yugutou.reckoning.controller;
 
 import cn.yugutou.reckoning.dto.req.BillReq;
 import cn.yugutou.reckoning.dto.req.LoginReq;
+import cn.yugutou.reckoning.dto.req.QueryUserReq;
 import cn.yugutou.reckoning.dto.req.UserBillAssociationReq;
 import cn.yugutou.reckoning.dto.resp.AddBillResp;
 import cn.yugutou.reckoning.dto.resp.LoginResp;
+import cn.yugutou.reckoning.dto.resp.QueryUserResp;
 import cn.yugutou.reckoning.service.BillService;
 import cn.yugutou.reckoning.service.UserService;
 import lombok.extern.slf4j.Slf4j;
@@ -28,8 +30,9 @@ public class BillingController {
    @Autowired
    private BillService billService;
 
+   //增加账单
     @PostMapping(value = "/addBill",produces = "application/json;charset=UTF-8")
-    public ResponseEntity<LoginResp> login(@RequestBody BillReq billReq){
+    public ResponseEntity<AddBillResp> login(@RequestBody BillReq billReq){
         long billid= billService.addBill(billReq);
         List<UserBillAssociationReq> userBillAssociationReqs = billReq.getUserBillAssociationReqs();
         BigDecimal amount = billReq.getAmount();
@@ -39,5 +42,10 @@ public class BillingController {
 
         return new ResponseEntity(resp,HttpStatus.OK);
     }
+
+
+
+
+
 
 }
