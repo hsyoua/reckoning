@@ -8,7 +8,5 @@ import java.math.BigDecimal;
 public class UserBillAssociationReq {
     private Long userId;
     private String userParticipationType;
-    private BigDecimal apportionedAmount;
-    private String paymentStatus;
 
 }

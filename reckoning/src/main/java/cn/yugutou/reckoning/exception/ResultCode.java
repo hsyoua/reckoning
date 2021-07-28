@@ -24,10 +24,9 @@ public enum ResultCode {
     //用户模块错误码 50100~50199
     USER_ALREAD_EXISTS(50100,"该手机用户已存在"),
     USER_LOGIN_CHECK_FAIL(50101,"The user does not exist or the password is incorrect"),
-
     //流程模块错误码 50200~50299
-    USER_BILL_AMOUNT(50200,"账单金额和用户分摊金额之和不等");
-    //订单模块错误码 50300~50399
+    //账单模块错误码 50300~50399
+    BILL_PARAMETER_BE_EMPTY(50300,"Billing participating user information cannot be blank");
 
     private final Integer code;
     private final String message;
