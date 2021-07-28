@@ -54,6 +54,10 @@ public class BillServiceImpl implements BillService {
             userBillAssciotionEntities.add(assciotionEntity);
             log.info("assciotionEntity.getUserId()的值"+assciotionEntity.getUserId());
         }
+
+
+
+
         return userBillAssociationMapper.addUserBillAssociation(userBillAssciotionEntities);
     }
 

@@ -30,7 +30,7 @@
     <!--新增账单-->
     <insert id="addBill" parameterType="cn.yugutou.reckoning.dao.entity.BillingInfo">
         insert into billing_info values
-        (#{billingId},#{amount},#{peopleNum},#{billingStatus},#{allocationMethod},#{consumptionNotes},#{consumerAddress},null,#{dissipate},now(),now());
+        (#{billingId},#{amount},#{peopleNum},#{billingStatus},#{allocationMethod},#{consumptionNotes},#{consumerAddress},#{createUserId},#{dissipate},now(),now());
           /*获取插入数据的主键*/
 <!--        <selectKey keyProperty="billingId" order="AFTER"  resultType="java.lang.Long">-->
 <!--            select LAST_INSERT_ID()-->

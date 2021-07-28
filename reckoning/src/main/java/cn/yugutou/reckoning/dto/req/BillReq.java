@@ -21,6 +21,7 @@ public class BillReq implements Serializable {
     private String allocationMethod;
     private String consumptionNotes;
     private String consumerAddress;
+    private Long createUserId;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date dissipate;
 
