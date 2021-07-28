@@ -61,4 +61,10 @@
                 #{pageNo} , #{pageSize}
         </where>
     </select>
+
+
+<!--    修改密码-->
+    <update id="updateUserPassword" parameterType="cn.yugutou.reckoning.dto.req.UpdatePassReq">
+        update usr_info set password = #{newPass} where  password= #{oldPass}
+    </update>
 </mapper>

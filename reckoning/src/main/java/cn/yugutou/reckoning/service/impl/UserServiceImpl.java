@@ -5,8 +5,10 @@ import cn.yugutou.reckoning.dao.mapper.UserMapper;
 import cn.yugutou.reckoning.dto.req.LoginReq;
 import cn.yugutou.reckoning.dto.req.QueryUserReq;
 import cn.yugutou.reckoning.dto.req.RegisterReq;
+import cn.yugutou.reckoning.dto.req.UpdatePassReq;
 import cn.yugutou.reckoning.dto.resp.LoginResp;
 import cn.yugutou.reckoning.exception.CustomException;
+import cn.yugutou.reckoning.exception.Result;
 import cn.yugutou.reckoning.exception.ResultCode;
 import cn.yugutou.reckoning.service.UserService;
 import cn.yugutou.reckoning.utils.CheckUtil;
@@ -96,5 +98,33 @@ public class UserServiceImpl implements UserService {
         log.info("pageNo,pageSize"+usrInfo.getPageNo()+","+usrInfo.getPageSize());
         List<UsrInfo> usrInfos = userMapper.queryUserByNamePhone(usrInfo);
         return usrInfos;
+    }
+
+    @Override
+    public Result updateUserPassword(UpdatePassReq updatePassReq) {
+        /*定义返回变量*/
+         String result;
+        /*获取旧密码，暂时定义一个值代替*/
+     String  oldPass = "123456";
+     /*判断输入的旧密码是否正确,旧密码和新密码是否相同，确认密码是否与新密码相同*/
+        String inoutOldPass = updatePassReq.getOldPass();
+        String inputNewPass=updatePassReq.getNewPass();
+        String confirmNesPass = updatePassReq.getConfirmNesPass();
+        if (!oldPass.equals(inoutOldPass)){
+            return Result.failure(ResultCode.USER_OLDPASSWORD_ERROR);
+        };
+        if (inoutOldPass.equals(inputNewPass)){
+            return Result.failure(ResultCode.USER_NEWPASSWORD_ERROR);
+        };
+        if (!confirmNesPass.equals(inputNewPass)){
+            return Result.failure(ResultCode.USER_CONFIRMPASSWORD_ERROR);
+        };
+
+        if (userMapper.updateUserPassword(updatePassReq)){
+            return Result.failure(ResultCode.SUCCESS);
+        }
+
+
+        return null;
     }
 }

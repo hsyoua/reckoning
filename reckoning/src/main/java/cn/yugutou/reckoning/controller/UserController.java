@@ -4,9 +4,12 @@ import cn.yugutou.reckoning.dao.entity.UsrInfo;
 import cn.yugutou.reckoning.dto.req.LoginReq;
 import cn.yugutou.reckoning.dto.req.QueryUserReq;
 import cn.yugutou.reckoning.dto.req.RegisterReq;
+import cn.yugutou.reckoning.dto.req.UpdatePassReq;
 import cn.yugutou.reckoning.dto.resp.LoginResp;
 import cn.yugutou.reckoning.dto.resp.QueryUserResp;
 import cn.yugutou.reckoning.dto.resp.RegisterResp;
+import cn.yugutou.reckoning.dto.resp.UpdatePassResp;
+import cn.yugutou.reckoning.exception.Result;
 import cn.yugutou.reckoning.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -48,7 +51,7 @@ public class UserController {
 
     //通过用户名或者手机号模糊查询用户
     @PostMapping(value = "/queryUser",produces = "application/json;charset=UTF-8")
-    public ResponseEntity<QueryUserResp> login(@RequestBody @Validated QueryUserReq queryUserReq){
+    public ResponseEntity<QueryUserResp> queryUserByNameAndPhone(@RequestBody @Validated QueryUserReq queryUserReq){
         log.info("controller pageNo and pageSize :"+ queryUserReq.getPageNo()+","+queryUserReq.getPageSize());
         //获取输入的起始页数，做转换后再封装
         Integer pageNo = queryUserReq.getPageNo();
@@ -65,5 +68,15 @@ public class UserController {
 
         System.out.println(queryUserResps);
         return new ResponseEntity(queryUserResps,HttpStatus.OK);
+    }
+
+
+    //修改密码
+    @PostMapping(value = "/updatePassword",produces = "application/json;charset=UTF-8")
+    public ResponseEntity<UpdatePassResp>  updatePasswordController(@RequestBody @Validated  UpdatePassReq updatePassReq){
+        Result result = userService.updateUserPassword(updatePassReq);
+
+        return new ResponseEntity(result,HttpStatus.OK);
+
     }
 }
