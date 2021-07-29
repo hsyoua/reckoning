@@ -58,7 +58,7 @@
         select
             user_id,user_name,mobile_no,user_remarks
         from usr_info
-        where  user_name like  '%${keyWord}%' or mobile_no like '%${keyWord}%'
+        where  user_name like  concat('%', #{keyWord}, '%')   or  mobile_no like    concat('%', #{keyWord}, '%')
 
     </select>
 
