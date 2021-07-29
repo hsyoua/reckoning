@@ -1,7 +1,9 @@
 package cn.yugutou.reckoning.dao.mapper;
 
 import cn.yugutou.reckoning.dao.entity.UsrInfo;
+import cn.yugutou.reckoning.dto.req.QueryUserReq;
 import cn.yugutou.reckoning.dto.req.UpdatePassReq;
+import cn.yugutou.reckoning.dto.resp.QueryUserResp;
 import org.apache.catalina.User;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -25,12 +27,11 @@ public interface UserMapper {
 
     /**
      * 通过手机号或者用户名查询用户
-     * @param user
+     * @param
      * @return
      */
-    List<UsrInfo> queryUserByNamePhone(UsrInfo user);
+    List<QueryUserResp> queryUserByNamePhone(QueryUserReq queryUserReq);
 
-    Integer queryCountByNamePhone(UsrInfo user);
 
     boolean updateUserPassword(UpdatePassReq updatePassReq);
 

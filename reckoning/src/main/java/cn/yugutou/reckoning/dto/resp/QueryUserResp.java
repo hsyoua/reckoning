@@ -10,4 +10,5 @@ public class QueryUserResp implements Serializable {
     private String userName;
     private String userRemarks;
     private  String mobileNo;
+
 }

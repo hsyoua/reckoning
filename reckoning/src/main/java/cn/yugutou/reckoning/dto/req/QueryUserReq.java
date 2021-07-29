@@ -1,6 +1,7 @@
 package cn.yugutou.reckoning.dto.req;
 
 import lombok.Data;
+import sun.applet.Main;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -16,4 +17,5 @@ public class QueryUserReq implements Serializable {
     //条数
     @NotNull(message = "The pageSize login mobileNo cannot be empty")
     private Integer pageSize;
+
 }

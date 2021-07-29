@@ -4,7 +4,10 @@ package cn.yugutou.reckoning.service;
 import cn.yugutou.reckoning.dao.entity.UsrInfo;
 import cn.yugutou.reckoning.dto.req.*;
 import cn.yugutou.reckoning.dto.resp.LoginResp;
+import cn.yugutou.reckoning.dto.resp.QueryUserAndTotalResp;
+import cn.yugutou.reckoning.dto.resp.QueryUserResp;
 import cn.yugutou.reckoning.exception.Result;
+import com.github.pagehelper.PageInfo;
 
 import java.util.List;
 
@@ -13,7 +16,7 @@ public interface UserService {
 
     LoginResp login(LoginReq loginReq);
 
-    List  queryUserByNamePhone(QueryUserReq queryUserReq );
+    PageInfo<QueryUserResp> queryUserByNamePhone(QueryUserReq queryUserReq );
 
 
     Result updateUserPassword(UpdatePassReq updatePassReq);

@@ -5,6 +5,7 @@ import cn.yugutou.reckoning.dto.req.*;
 import cn.yugutou.reckoning.dto.resp.*;
 import cn.yugutou.reckoning.exception.Result;
 import cn.yugutou.reckoning.service.UserService;
+import com.github.pagehelper.PageInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,27 +46,17 @@ public class UserController {
 
     //通过用户名或者手机号模糊查询用户
     @PostMapping(value = "/queryUser",produces = "application/json;charset=UTF-8")
-    public ResponseEntity<QueryUserResp> queryUserByNameAndPhone(@RequestBody @Validated QueryUserReq queryUserReq){
+    public ResponseEntity queryUserByNameAndPhone(@RequestBody @Validated QueryUserReq queryUserReq){
         log.info("controller pageNo and pageSize :"+ queryUserReq.getPageNo()+","+queryUserReq.getPageSize());
         //获取输入的起始页数，做转换后再封装
         Integer pageNo = queryUserReq.getPageNo();
         Integer pageSize = queryUserReq.getPageSize();
-
-
         pageNo=(pageNo-1)*pageSize;
         queryUserReq.setPageNo(pageNo);
-        List   newUsrInfos = userService.queryUserByNamePhone(queryUserReq);
-        ArrayList<QueryUserResp> queryUserResps = new ArrayList<>();
-        List<UsrInfo> UsrInfos = (List<UsrInfo>) newUsrInfos.get(0);
-        QueryUserAndTotalResp queryUserAndTotalResp = new QueryUserAndTotalResp();
-        for (UsrInfo usrInfo : UsrInfos) {
-            QueryUserResp queryUserResp = new QueryUserResp();
-            BeanUtils.copyProperties(usrInfo,queryUserResp);
-            queryUserResps.add(queryUserResp);
-        }
-        queryUserAndTotalResp.setQueryUserResps(queryUserResps);
-        queryUserAndTotalResp.setTotalNum((Integer) newUsrInfos.get(1));
-
+        PageInfo<QueryUserResp> queryUserRespPageInfo = userService.queryUserByNamePhone(queryUserReq);
+        QueryUserAndTotalResp queryUserAndTotalResp=new QueryUserAndTotalResp();
+        queryUserAndTotalResp.setUserInfoByNamePhone(queryUserRespPageInfo.getList());
+        queryUserAndTotalResp.setTotalNum((int) queryUserRespPageInfo.getTotal());
         return new ResponseEntity(queryUserAndTotalResp,HttpStatus.OK);
     }
 

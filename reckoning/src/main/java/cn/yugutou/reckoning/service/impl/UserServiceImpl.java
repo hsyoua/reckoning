@@ -4,12 +4,16 @@ import cn.yugutou.reckoning.dao.entity.UsrInfo;
 import cn.yugutou.reckoning.dao.mapper.UserMapper;
 import cn.yugutou.reckoning.dto.req.*;
 import cn.yugutou.reckoning.dto.resp.LoginResp;
+import cn.yugutou.reckoning.dto.resp.QueryUserAndTotalResp;
+import cn.yugutou.reckoning.dto.resp.QueryUserResp;
 import cn.yugutou.reckoning.exception.CustomException;
 import cn.yugutou.reckoning.exception.Result;
 import cn.yugutou.reckoning.exception.ResultCode;
 import cn.yugutou.reckoning.service.UserService;
 import cn.yugutou.reckoning.utils.CheckUtil;
 import cn.yugutou.reckoning.utils.NumberGenerator;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import lombok.extern.java.Log;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
@@ -81,28 +85,22 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List queryUserByNamePhone(QueryUserReq queryUserReq) {
-        UsrInfo usrInfo = new UsrInfo();
-        String keyWord = queryUserReq.getKeyWord();
-        BeanUtils.copyProperties(queryUserReq,usrInfo);
-         /*判断参数是否是数字*/
-        boolean numeric = CheckUtil.isNumeric(keyWord);
-        if(numeric){
-            usrInfo.setMobileNo(keyWord);
-        };
-
-            usrInfo.setUserName(keyWord);
-
+    public PageInfo<QueryUserResp> queryUserByNamePhone(QueryUserReq queryUserReq) {
         Integer pageSize = queryUserReq.getPageSize();
+        Integer pageNo = queryUserReq.getPageNo();
         if (pageSize>50){
-          throw new CustomException(ResultCode.user_pagesize_max);
+            throw new CustomException(ResultCode.user_pagesize_max);
         }
-        ArrayList newUserInfos = new ArrayList();
-        List<UsrInfo> usrInfos = userMapper.queryUserByNamePhone(usrInfo);
-        Integer userCount = userMapper.queryCountByNamePhone(usrInfo);
-        newUserInfos.add(usrInfos);
-        newUserInfos.add(userCount);
-        return newUserInfos;
+        /*输入起始页或者页数小于0，默认显示第一页五条数据*/
+        if (pageNo<0 || pageSize <=0){
+            pageNo = 1;
+            pageSize = 5;
+        }
+            PageHelper.startPage(pageNo,pageSize);
+            List<QueryUserResp> queryUserResps = userMapper.queryUserByNamePhone(queryUserReq);
+            PageInfo<QueryUserResp> queryUserRespPageInfo = new PageInfo<>(queryUserResps);
+
+            return queryUserRespPageInfo;
     }
 
     @Override
