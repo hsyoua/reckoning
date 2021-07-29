@@ -1,10 +1,7 @@
 package cn.yugutou.reckoning.controller;
 
 import cn.yugutou.reckoning.dao.entity.UsrInfo;
-import cn.yugutou.reckoning.dto.req.LoginReq;
-import cn.yugutou.reckoning.dto.req.QueryUserReq;
-import cn.yugutou.reckoning.dto.req.RegisterReq;
-import cn.yugutou.reckoning.dto.req.UpdatePassReq;
+import cn.yugutou.reckoning.dto.req.*;
 import cn.yugutou.reckoning.dto.resp.*;
 import cn.yugutou.reckoning.exception.Result;
 import cn.yugutou.reckoning.service.UserService;
@@ -81,4 +78,21 @@ public class UserController {
         return new ResponseEntity(result,HttpStatus.OK);
 
     }
+
+    @GetMapping (value = "/queryUserDetail",produces = "application/json;charset=UTF-8")
+    public ResponseEntity  queryUserDetailController(  Long id){
+        UsrInfo usrInfo =  userService.queryUserDetail(id);
+
+        return new ResponseEntity(usrInfo,HttpStatus.OK);
+
+    }
+
+    @PostMapping (value = "/updateUser",produces = "application/json;charset=UTF-8")
+    public ResponseEntity  updateUserSelfController(@RequestBody @Validated UpdateUserInfoReq updateUserInfoReq){
+        boolean result = userService.updateUserinfoSelf(updateUserInfoReq);
+
+        return new ResponseEntity(result,HttpStatus.OK);
+
+    }
+
 }

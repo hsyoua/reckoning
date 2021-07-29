@@ -34,5 +34,9 @@ public interface UserMapper {
 
     boolean updateUserPassword(UpdatePassReq updatePassReq);
 
+    UsrInfo queryUserDetail(long id);
+
+
+    boolean updateUserinfoSelf(UsrInfo usrInfo);
 
 }

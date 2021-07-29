@@ -2,10 +2,7 @@ package cn.yugutou.reckoning.service.impl;
 
 import cn.yugutou.reckoning.dao.entity.UsrInfo;
 import cn.yugutou.reckoning.dao.mapper.UserMapper;
-import cn.yugutou.reckoning.dto.req.LoginReq;
-import cn.yugutou.reckoning.dto.req.QueryUserReq;
-import cn.yugutou.reckoning.dto.req.RegisterReq;
-import cn.yugutou.reckoning.dto.req.UpdatePassReq;
+import cn.yugutou.reckoning.dto.req.*;
 import cn.yugutou.reckoning.dto.resp.LoginResp;
 import cn.yugutou.reckoning.exception.CustomException;
 import cn.yugutou.reckoning.exception.Result;
@@ -134,5 +131,18 @@ public class UserServiceImpl implements UserService {
 
 
         return null;
+    }
+
+    @Override
+    public UsrInfo queryUserDetail(long id) {
+        return userMapper.queryUserDetail(id);
+    }
+
+    @Override
+    public boolean updateUserinfoSelf(UpdateUserInfoReq updateUserInfoReq) {
+        UsrInfo usrInfo = new UsrInfo();
+        BeanUtils.copyProperties(updateUserInfoReq,usrInfo);
+
+        return userMapper.updateUserinfoSelf(usrInfo);
     }
 }
