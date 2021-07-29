@@ -21,7 +21,7 @@ public interface UserService {
 
     Result updateUserPassword(UpdatePassReq updatePassReq);
 
-    UsrInfo queryUserDetail(long id) ;
+    UsrInfo queryUserDetail(Long id) ;
 
     boolean updateUserinfoSelf(UpdateUserInfoReq updateUserInfoReq);
 

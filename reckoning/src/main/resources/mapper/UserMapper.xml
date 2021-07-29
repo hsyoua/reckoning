@@ -65,16 +65,16 @@
 
 <!--    修改密码-->
     <update id="updateUserPassword" parameterType="cn.yugutou.reckoning.dto.req.UpdatePassReq">
-        update usr_info set password = #{newPass} where  password= #{oldPass}
+        update usr_info set password = #{newPass} , modify_time =now() where  user_id= #{userId}
     </update>
     
     
 <!--    查询用户详情-->
-    <select id="queryUserDetail" parameterType="long" resultMap="BaseRsultMap">
+    <select id="queryUserDetail" parameterType="java.lang.Long" resultMap="BaseRsultMap">
         select
         <include refid="selectAll"></include>
         from usr_info
-        where  user_id =   #{_parameter}
+        where  user_id =  #{id}
 
     </select>
 

@@ -105,11 +105,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Result updateUserPassword(UpdatePassReq updatePassReq) {
-        /*定义返回变量*/
-         String result;
-        /*获取旧密码，暂时定义一个值代替*/
-     String  oldPass = "123456";
-     /*判断输入的旧密码是否正确,旧密码和新密码是否相同，确认密码是否与新密码相同*/
+        Long userId = updatePassReq.getUserId();
+        UsrInfo usrInfo = userMapper.queryUserDetail(userId);
+        //获取旧密码
+        String oldPass = usrInfo.getPassword();
+        /*判断输入的旧密码是否正确,旧密码和新密码是否相同，确认密码是否与新密码相同*/
         String inoutOldPass = updatePassReq.getOldPass();
         String inputNewPass=updatePassReq.getNewPass();
         String confirmNesPass = updatePassReq.getConfirmNesPass();
@@ -132,7 +132,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UsrInfo queryUserDetail(long id) {
+    public UsrInfo queryUserDetail(Long id) {
+        log.info("user id [{}]",id);
         return userMapper.queryUserDetail(id);
     }
 
