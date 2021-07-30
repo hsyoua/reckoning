@@ -9,5 +9,5 @@ import java.util.List;
 @Data
 public class QueryUserAndTotalResp implements Serializable {
     private List  userInfoByNamePhone;
-    private Integer totalNum;
+    private Long totalNum;
 }

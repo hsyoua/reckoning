@@ -51,15 +51,7 @@ public class UserController {
     @PostMapping(value = "/queryUser",produces = "application/json;charset=UTF-8")
     public ResponseEntity queryUserByNameAndPhone(@RequestBody @Validated QueryUserReq queryUserReq){
         log.info("controller pageNo and pageSize :"+ queryUserReq.getPageNo()+","+queryUserReq.getPageSize());
-        //获取输入的起始页数，做转换后再封装
-        Integer pageNo = queryUserReq.getPageNo();
-        Integer pageSize = queryUserReq.getPageSize();
-        pageNo=(pageNo-1)*pageSize;
-        queryUserReq.setPageNo(pageNo);
-        PageInfo<QueryUserResp> queryUserRespPageInfo = userService.queryUserByNamePhone(queryUserReq);
-        QueryUserAndTotalResp queryUserAndTotalResp=new QueryUserAndTotalResp();
-        queryUserAndTotalResp.setUserInfoByNamePhone(queryUserRespPageInfo.getList());
-        queryUserAndTotalResp.setTotalNum((int) queryUserRespPageInfo.getTotal());
+        QueryUserAndTotalResp queryUserAndTotalResp = userService.queryUserByNamePhone(queryUserReq);
         return new ResponseEntity(queryUserAndTotalResp,HttpStatus.OK);
     }
 

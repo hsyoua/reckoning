@@ -16,7 +16,7 @@ public interface UserService {
 
     LoginResp login(LoginReq loginReq);
 
-    PageInfo<QueryUserResp> queryUserByNamePhone(QueryUserReq queryUserReq );
+    QueryUserAndTotalResp queryUserByNamePhone(QueryUserReq queryUserReq );
 
 
     Result updateUserPassword(UpdatePassReq updatePassReq);

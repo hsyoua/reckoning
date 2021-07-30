@@ -12,6 +12,7 @@ import cn.yugutou.reckoning.exception.ResultCode;
 import cn.yugutou.reckoning.service.UserService;
 import cn.yugutou.reckoning.utils.CheckUtil;
 import cn.yugutou.reckoning.utils.NumberGenerator;
+import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import lombok.extern.java.Log;
@@ -85,22 +86,20 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public PageInfo<QueryUserResp> queryUserByNamePhone(QueryUserReq queryUserReq) {
+    public QueryUserAndTotalResp queryUserByNamePhone(QueryUserReq queryUserReq) {
         Integer pageSize = queryUserReq.getPageSize();
         Integer pageNo = queryUserReq.getPageNo();
         if (pageSize>50){
             throw new CustomException(ResultCode.user_pagesize_max);
         }
-        /*输入起始页或者页数小于0，默认显示第一页五条数据*/
-        if (pageNo<0 || pageSize <=0){
-            pageNo = 1;
-            pageSize = 5;
-        }
-            PageHelper.startPage(pageNo,pageSize);
-            List<QueryUserResp> queryUserResps = userMapper.queryUserByNamePhone(queryUserReq);
-            PageInfo<QueryUserResp> queryUserRespPageInfo = new PageInfo<>(queryUserResps);
 
-            return queryUserRespPageInfo;
+            Page page = PageHelper.startPage(pageNo,pageSize);
+            log.info("page:[{}]",page.getPageNum()+ page.getPageSize());
+            List<QueryUserResp> queryUserResps = userMapper.queryUserByNamePhone(queryUserReq);
+        QueryUserAndTotalResp queryUserAndTotalResp =   new QueryUserAndTotalResp();
+        queryUserAndTotalResp.setTotalNum(page.getTotal());
+        queryUserAndTotalResp.setUserInfoByNamePhone(queryUserResps);
+            return queryUserAndTotalResp;
     }
 
     @Override
