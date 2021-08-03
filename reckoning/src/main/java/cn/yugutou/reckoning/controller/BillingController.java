@@ -30,6 +30,7 @@ public class BillingController {
     //增加账单
     @PostMapping(value = "/addBill",produces = "application/json;charset=UTF-8")
     public ResponseEntity<AddBillResp> login(@RequestBody BillReq billReq){
+        System.out.println(billReq);
         long billid= billService.addBill(billReq);
         List<UserBillAssociationReq> userBillAssociationReqs = billReq.getUserBillAssociationReqs();
         BigDecimal amount = billReq.getAmount();

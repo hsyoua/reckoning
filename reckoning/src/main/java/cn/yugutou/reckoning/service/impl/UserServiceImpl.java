@@ -60,6 +60,7 @@ public class UserServiceImpl implements UserService {
         //query userInfo by mobileNo
         log.debug("login user moblie no [{}]",loginReq.getMobileNo());
         UsrInfo usrInfo =  userMapper.queryUsrInfoByPhone(loginReq.getMobileNo());
+        System.out.println(usrInfo.getUserStatus());
         //check user status
         if(!"01".equals(usrInfo.getUserStatus())) {
             throw new CustomException(ResultCode.USER_STATUS_EXCEPTION);
