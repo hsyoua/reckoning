@@ -1,11 +1,9 @@
 package cn.yugutou.reckoning.controller;
 
-import cn.yugutou.reckoning.dto.req.BillReq;
-import cn.yugutou.reckoning.dto.req.LoginReq;
-import cn.yugutou.reckoning.dto.req.QueryBillingInfoReq;
-import cn.yugutou.reckoning.dto.req.UserBillAssociationReq;
+import cn.yugutou.reckoning.dto.req.*;
 import cn.yugutou.reckoning.dto.resp.AddBillResp;
 import cn.yugutou.reckoning.dto.resp.LoginResp;
+import cn.yugutou.reckoning.dto.resp.QueryBillDetailResp;
 import cn.yugutou.reckoning.dto.resp.QueryBillingInfoResp;
 import cn.yugutou.reckoning.service.BillService;
 import cn.yugutou.reckoning.service.UserService;
@@ -14,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -49,4 +48,18 @@ public class BillingController {
         QueryBillingInfoResp queryBillingInfoResp = new QueryBillingInfoResp();
         return new ResponseEntity(queryBillingInfoResp,HttpStatus.OK);
     }
+
+
+    /**
+     * 账单详情查询
+     * @param request
+     * @return
+     */
+    @PostMapping (value = "/fingBillDetail",produces = "application/json;charset=UTF-8")
+    public ResponseEntity  fingBillDetail(@RequestBody @Validated QueryBillDetailReq request){
+        List<QueryBillDetailResp> billDetails = billService.findBillDetail(request);
+        return new ResponseEntity(billDetails,HttpStatus.OK);
+
+    }
+
 }
