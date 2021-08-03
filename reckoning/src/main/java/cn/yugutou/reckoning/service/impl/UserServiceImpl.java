@@ -10,12 +10,10 @@ import cn.yugutou.reckoning.exception.CustomException;
 import cn.yugutou.reckoning.exception.Result;
 import cn.yugutou.reckoning.exception.ResultCode;
 import cn.yugutou.reckoning.service.UserService;
-import cn.yugutou.reckoning.utils.CheckUtil;
 import cn.yugutou.reckoning.utils.NumberGenerator;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import lombok.extern.java.Log;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -24,7 +22,6 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -60,13 +57,14 @@ public class UserServiceImpl implements UserService {
         //query userInfo by mobileNo
         log.debug("login user moblie no [{}]",loginReq.getMobileNo());
         UsrInfo usrInfo =  userMapper.queryUsrInfoByPhone(loginReq.getMobileNo());
+        log.debug("userinfo[{}]",usrInfo.getUserStatus());
         //check user status
-        if(!"01".equals(usrInfo.getUserStatus())) {
+        if(!("01".equals(usrInfo.getUserStatus()))) {
             throw new CustomException(ResultCode.USER_STATUS_EXCEPTION);
         }
         //check user login password
         if(!StringUtils.equals(loginReq.getPassword(),usrInfo.getPassword())){
-            Integer errorNum = usrInfo.getPasswordErrorNum();
+            int errorNum = usrInfo.getPasswordErrorNum();
             if(++errorNum>=5){
                 //update userStatus frozen
                 userMapper.frozenStatusById(usrInfo.getUserId(),errorNum);
@@ -93,7 +91,7 @@ public class UserServiceImpl implements UserService {
             throw new CustomException(ResultCode.user_pagesize_max);
         }
 
-            Page page = PageHelper.startPage(pageNo,pageSize);
+          Page page =PageHelper.startPage(pageNo,pageSize);
             log.info("page:[{}]",page.getPageNum()+ page.getPageSize());
             List<QueryUserResp> queryUserResps = userMapper.queryUserByNamePhone(queryUserReq);
         QueryUserAndTotalResp queryUserAndTotalResp =   new QueryUserAndTotalResp();

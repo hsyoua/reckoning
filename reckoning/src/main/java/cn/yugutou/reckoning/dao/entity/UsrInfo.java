@@ -18,6 +18,6 @@ public class UsrInfo {
     private Integer pageNo;
     private Integer pageSize;
     private Integer  totalNum;
-    private Integer passwordErrorNum;
+    private int passwordErrorNum;
     private String userStatus;
 }

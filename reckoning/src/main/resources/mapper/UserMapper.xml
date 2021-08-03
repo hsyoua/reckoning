@@ -31,7 +31,7 @@
         <result column="user_remarks" property="userRemarks" javaType="String"/>
     </resultMap>
     <sql id="selectAll">
-        user_id,user_name,password,mobile_no,user_role,user_remarks,last_login_time,create_time,modify_time
+        user_id,user_name,password,mobile_no,user_role,user_remarks,last_login_time,create_time,modify_time,user_status,password_error_num
     </sql>
     <insert id="saveUser" parameterType="cn.yugutou.reckoning.dao.entity.UsrInfo" >
         insert into usr_info values (#{userId},#{password},#{userName},#{mobileNo},#{userRole},#{userRemarks},null,now(),now(),#{userStatus},#{passwordErrorNum})
