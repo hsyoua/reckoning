@@ -2,9 +2,11 @@ package cn.yugutou.reckoning.controller;
 
 import cn.yugutou.reckoning.dto.req.BillReq;
 import cn.yugutou.reckoning.dto.req.LoginReq;
+import cn.yugutou.reckoning.dto.req.QueryBillingInfoReq;
 import cn.yugutou.reckoning.dto.req.UserBillAssociationReq;
 import cn.yugutou.reckoning.dto.resp.AddBillResp;
 import cn.yugutou.reckoning.dto.resp.LoginResp;
+import cn.yugutou.reckoning.dto.resp.QueryBillingInfoResp;
 import cn.yugutou.reckoning.service.BillService;
 import cn.yugutou.reckoning.service.UserService;
 import lombok.extern.slf4j.Slf4j;
@@ -41,4 +43,10 @@ public class BillingController {
         return new ResponseEntity(resp,HttpStatus.OK);
     }
 
+    //查询用户账单信息(未完成)
+    @PostMapping(value = "/queryBilling",produces = "application/json;charset=UTF-8")
+    public ResponseEntity<QueryBillingInfoResp> queryBilling(@RequestBody QueryBillingInfoReq queryBillingInfoReq){
+        QueryBillingInfoResp queryBillingInfoResp = new QueryBillingInfoResp();
+        return new ResponseEntity(queryBillingInfoResp,HttpStatus.OK);
+    }
 }
