@@ -57,9 +57,8 @@ public class UserServiceImpl implements UserService {
         //query userInfo by mobileNo
         log.debug("login user moblie no [{}]",loginReq.getMobileNo());
         UsrInfo usrInfo =  userMapper.queryUsrInfoByPhone(loginReq.getMobileNo());
-        log.debug("userinfo[{}]",usrInfo.getUserStatus());
         //check user status
-        if(!("01".equals(usrInfo.getUserStatus()))) {
+        if(!"01".equals(usrInfo.getUserStatus())) {
             throw new CustomException(ResultCode.USER_STATUS_EXCEPTION);
         }
         //check user login password
@@ -91,7 +90,7 @@ public class UserServiceImpl implements UserService {
             throw new CustomException(ResultCode.user_pagesize_max);
         }
 
-          Page page =PageHelper.startPage(pageNo,pageSize);
+            Page page = PageHelper.startPage(pageNo,pageSize);
             log.info("page:[{}]",page.getPageNum()+ page.getPageSize());
             List<QueryUserResp> queryUserResps = userMapper.queryUserByNamePhone(queryUserReq);
         QueryUserAndTotalResp queryUserAndTotalResp =   new QueryUserAndTotalResp();

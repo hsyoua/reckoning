@@ -1,19 +1,35 @@
 <template>
   <div class="login">
-    <img src="@/assets/image/1.jpg">
+    <img src="@/assets/image/1.jpg" />
     <div class="from" v-if="show">
       <h3>欢迎登录</h3>
       <el-form ref="loginForm" :model="loginForm" :rules="rules">
         手机号
         <el-form-item prop="mobileNo">
-          <el-input v-model="loginForm.mobileNo" class="input" placeholder="请输入账号" />
+          <el-input
+            v-model="loginForm.mobileNo"
+            class="input"
+            placeholder="请输入账号"
+          />
         </el-form-item>
         密码
         <el-form-item prop="password">
-          <el-input v-model="loginForm.password" class="input" placeholder="请输入密码" type="password" @keyup.enter.native="submitForm" />
+          <el-input
+            v-model="loginForm.password"
+            class="input"
+            placeholder="请输入密码"
+            type="password"
+            @keyup.enter.native="submitForm('loginForm')"
+          />
         </el-form-item>
         <el-form-item>
-          <el-button bordered class="btn" type="primary" @click="submitForm('loginForm')">登录</el-button>
+          <el-button
+            bordered
+            class="btn"
+            type="primary"
+            @click="submitForm('loginForm')"
+            >登录</el-button
+          >
         </el-form-item>
         <el-form-item>
           <el-button bordered class="btn" @click="addUser">注册</el-button>
@@ -25,32 +41,62 @@
       <el-form ref="userForm" :model="userForm" :rules="rules">
         用户名
         <el-form-item prop="userName">
-          <el-input v-model="userForm.userName" class="input" placeholder="请输入账号" />
+          <el-input
+            v-model="userForm.userName"
+            class="input"
+            placeholder="请输入账号"
+          />
         </el-form-item>
         密码
         <el-form-item prop="password">
-          <el-input v-model="userForm.password" class="input" placeholder="请输入密码" type="password" />
+          <el-input
+            v-model="userForm.password"
+            class="input"
+            placeholder="请输入密码"
+            type="password"
+          />
         </el-form-item>
         确认密码
         <el-form-item prop="checkPass">
-          <el-input type="password" v-model="userForm.checkPass" autocomplete="off"></el-input>
+          <el-input
+            type="password"
+            v-model="userForm.checkPass"
+            autocomplete="off"
+          ></el-input>
         </el-form-item>
         手机号
         <el-form-item prop="mobileNo">
-          <el-input v-model="userForm.mobileNo" class="input" placeholder="请输入手机号" />
+          <el-input
+            v-model="userForm.mobileNo"
+            class="input"
+            placeholder="请输入手机号"
+          />
         </el-form-item>
         备注
         <el-form-item prop="userRemarks">
-          <el-input v-model="userForm.userRemarks" class="input" placeholder="请输入备注" type="textarea" />
+          <el-input
+            v-model="userForm.userRemarks"
+            class="input"
+            placeholder="请输入备注"
+            type="textarea"
+          />
         </el-form-item>
         <el-form-item>
-          <el-button bordered class="btn" type="primary" @click="submitForm('userForm')">注册</el-button>
+          <el-button
+            bordered
+            class="btn"
+            type="primary"
+            @click="submitForm('userForm')"
+            >注册</el-button
+          >
         </el-form-item>
         <el-form-item>
-          <el-button bordered class="btn" @click="resetForm('userForm')">重置</el-button>
+          <el-button bordered class="btn" @click="resetForm('userForm')"
+            >重置</el-button
+          >
         </el-form-item>
         <el-form-item>
-          <el-button bordered class="btn" @click="addUser">登录</el-button>
+          <el-button bordered class="btn" @click="addUser()">登录</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -124,8 +170,14 @@ export default {
         if (valid) {
           //用户注册
           if (formName === "userForm") {
-            Api.setNewUser(this.userForm).then((res) => {
-              console.log(res);
+            let pramars = {
+              userName: this.userForm.userName,
+              password: this.userForm.password,
+              mobileNo: this.userForm.mobileNo,
+              userRemarks: this.userForm.userRemarks,
+            };
+            Api.setNewUser(pramars).then((res) => {
+              // console.log(res);
               if (res.data.code === 50001) {
                 this.$message.error(res.message);
               }
@@ -145,7 +197,7 @@ export default {
             this.userGetLogin(this.loginForm);
           }
         } else {
-          console.log("error submit!!");
+          // console.log("error submit!!");
           return false;
         }
       });
@@ -161,19 +213,20 @@ export default {
     //用户登录方法
     userGetLogin(val) {
       Api.userLogin(val).then((res) => {
-        console.log(res);
-        if (res.data.code === 50001) {
-          this.$message.error("用户不存在");
-        }
-        if (res.data.code === 50101) {
-          this.$message.error("密码错误，请重新输入");
-        }
-        if (res.data.userName) {
+        // console.log(res);
+        if (res.data.code === 20000) {
+          this.$store.commit("setUserData", res.data);
           this.$message({
             message: "登录成功",
             type: "success",
           });
           this.$router.push("/home");
+        }
+        if (!(res.data.code === 2000)) {
+          this.$message({
+            message: res.data.message,
+            type: "error",
+          });
         }
       });
     },

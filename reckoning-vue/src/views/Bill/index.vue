@@ -1,5 +1,5 @@
 <template>
   <div>
-    第二个页面
+    
   </div>
 </template>
