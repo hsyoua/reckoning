@@ -57,3 +57,21 @@ CREATE TABLE `usr_bill_association` (
                                         `modify_time` datetime NOT NULL COMMENT '修改时间',
                                         PRIMARY KEY (`association_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户账单关联表';
+
+
+/**
+  create table review_info
+  by:hsy  2021:08:03
+ */
+drop table if exists review_info;
+CREATE TABLE `review_info` (
+                               `review_id` bigint(12) NOT NULL COMMENT '审核id',
+                               `reviewer_id` INTEGER(9) NOT NULL COMMENT '审核人id',
+                               `billing_id` INTEGER(9) NOT NULL COMMENT '账单id',
+                               `review_time` datetime default NULL COMMENT '审核时间',
+                               `review_status` VARCHAR(2) not null COMMENT '审核状态：00-待审核、01-审核通过、02-审核拒绝',
+                               `rejection_reason` VARCHAR(300) DEFAULT NULL COMMENT '拒绝原因：当审核拒绝时，拒绝原因不能为空',
+                               `create_time` datetime NOT NULL COMMENT '创建时间',
+                               `modify_time` datetime NOT NULL COMMENT '修改时间',
+                               PRIMARY KEY (`review_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='账单审核表';
