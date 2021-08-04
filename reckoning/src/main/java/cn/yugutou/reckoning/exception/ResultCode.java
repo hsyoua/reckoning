@@ -12,7 +12,7 @@ import lombok.Getter;
 public enum ResultCode {
 
     //成功提示码
-    SUCCESS(20000, "成功"),
+    SUCCESS(200, "success"),
 
     //自定义失败信息
     FAILURE(50000, "失败"),

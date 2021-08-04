@@ -3,21 +3,14 @@ package cn.yugutou.reckoning.controller;
 import cn.yugutou.reckoning.dao.entity.UsrInfo;
 import cn.yugutou.reckoning.dto.req.*;
 import cn.yugutou.reckoning.dto.resp.*;
-import cn.yugutou.reckoning.exception.Result;
+import cn.yugutou.reckoning.utils.Result;
 import cn.yugutou.reckoning.service.UserService;
-import com.github.pagehelper.PageInfo;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.ibatis.annotations.Param;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
-import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
-import java.util.List;
 
 @RequestMapping("/user")
 @RestController
@@ -40,10 +33,10 @@ public class UserController {
     }
 
     @PostMapping(value = "/login",produces = "application/json;charset=UTF-8")
-    public ResponseEntity<LoginResp> login(@RequestBody @Validated LoginReq loginReq){
+    public Result<LoginResp> login(@RequestBody @Validated LoginReq loginReq){
         log.info("login request is [{}]",loginReq);
         LoginResp loginResp = userService.login(loginReq);
-        return new ResponseEntity<>(loginResp,HttpStatus.OK);
+        return Result.success(loginResp);
     };
 
 

@@ -1,5 +1,6 @@
-package cn.yugutou.reckoning.exception;
+package cn.yugutou.reckoning.utils;
 
+import cn.yugutou.reckoning.exception.ResultCode;
 import lombok.Data;
 
 import java.io.Serializable;

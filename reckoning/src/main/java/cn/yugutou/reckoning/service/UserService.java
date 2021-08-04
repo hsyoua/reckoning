@@ -5,11 +5,7 @@ import cn.yugutou.reckoning.dao.entity.UsrInfo;
 import cn.yugutou.reckoning.dto.req.*;
 import cn.yugutou.reckoning.dto.resp.LoginResp;
 import cn.yugutou.reckoning.dto.resp.QueryUserAndTotalResp;
-import cn.yugutou.reckoning.dto.resp.QueryUserResp;
-import cn.yugutou.reckoning.exception.Result;
-import com.github.pagehelper.PageInfo;
-
-import java.util.List;
+import cn.yugutou.reckoning.utils.Result;
 
 public interface UserService {
     boolean registerUser(RegisterReq registerRequset);
