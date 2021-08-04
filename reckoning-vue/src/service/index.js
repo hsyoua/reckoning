@@ -1,14 +1,19 @@
 import axios from 'axios'
+// import {
+//   Message,
+// } from 'element-ui'
 
 const http = axios.create({
-  baseURL: 'http://192.168.1.94:8081',
+  baseURL: process.env.NODE_ENV === 'development' ? '/api' : '/',
   headers: {
-      'Content-Type': 'application/json',
+    'Content-Type': 'application/json',
   },
 })
 
+
 // 添加请求拦截器
 http.interceptors.request.use(function (config) {
+  // console.log(config);
   // 在发送请求之前做些什么
   return config;
 }, function (error) {
@@ -19,6 +24,12 @@ http.interceptors.request.use(function (config) {
 // 添加响应拦截器
 http.interceptors.response.use(function (response) {
   // 对响应数据做点什么
+  // if(!(response.data.code === 2000)){
+  //   Message({
+  //     message:response.data.message,
+  //     type:'error'
+  //   })
+  // }
   return response;
 }, function (error) {
   // 对响应错误做点什么

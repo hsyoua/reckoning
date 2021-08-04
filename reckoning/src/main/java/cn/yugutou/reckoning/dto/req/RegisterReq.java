@@ -12,5 +12,5 @@ public class RegisterReq implements Serializable {
     private String password;
     @NotBlank(message = "The user mobile no cannot be empty")
     private String mobileNo;
-    private String userRemark;
+    private String userRemarks;
 }

@@ -15,4 +15,9 @@ public class UsrInfo {
     private Date lastLoginTime;
     private Date createTime;
     private Date modifyTime;
+    private Integer pageNo;
+    private Integer pageSize;
+    private Integer  totalNum;
+    private int passwordErrorNum;
+    private String userStatus;
 }

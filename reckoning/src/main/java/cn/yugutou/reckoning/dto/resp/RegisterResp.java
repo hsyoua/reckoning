@@ -9,4 +9,7 @@ import java.net.URL;
 @Data
 public class RegisterResp implements Serializable {
     private boolean result;
+    public RegisterResp(Boolean result){
+        this.result = result;
+    }
 }

@@ -5,14 +5,23 @@ import cn.yugutou.reckoning.dao.entity.UserBillAssociation;
 import cn.yugutou.reckoning.dao.mapper.BillingMapper;
 import cn.yugutou.reckoning.dao.mapper.UserBillAssociationMapper;
 import cn.yugutou.reckoning.dto.req.BillReq;
+import cn.yugutou.reckoning.dto.req.QueryBillDetailReq;
+import cn.yugutou.reckoning.dto.req.QueryBillingInfoReq;
 import cn.yugutou.reckoning.dto.req.UserBillAssociationReq;
+import cn.yugutou.reckoning.dto.resp.QueryBillDetailResp;
+import cn.yugutou.reckoning.dto.resp.QueryBillingInfoResp;
+import cn.yugutou.reckoning.exception.CustomException;
+import cn.yugutou.reckoning.exception.ResultCode;
 import cn.yugutou.reckoning.service.BillService;
 import cn.yugutou.reckoning.utils.NumberGenerator;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,35 +35,81 @@ public class BillServiceImpl implements BillService {
     @Autowired
     private UserBillAssociationMapper userBillAssociationMapper;
 
-    //定义账单id
-    Long billid;
+    private final static String DEFAULT_PAYMENT_STATUS = "01";
+    private final static String DEFAULT_BILLING_STATUS = "01";
 
     @Override
-    public boolean addBill(BillReq billReq) {
+    public Long addBill(BillReq billReq) {
         BillingInfo billingInfo = new BillingInfo();
-        BeanUtils.copyProperties(billReq,billingInfo);
+        BeanUtils.copyProperties(billReq, billingInfo);
         //获取账单id
-         billid = NumberGenerator.getNumber(9);
+        long billid = NumberGenerator.getNumber(12);
+
         billingInfo.setBillingId(billid);
-      log.info("billingInfo的值"+billingInfo);
-        return billingMapper.addBill(billingInfo);
+        billingInfo.setBillingStatus(DEFAULT_BILLING_STATUS);
+        billingMapper.addBill(billingInfo);
+        return billid;
     }
 
     @Override
-    public boolean addUserBillAssociation(List<UserBillAssociationReq> userBillAssociationReqs) {
+    public boolean addUserBillAssociation(List<UserBillAssociationReq> userBillAssociationReqs, Long billid, BigDecimal amount) {
         ArrayList<UserBillAssociation> userBillAssociations = new ArrayList<>();
-        //获取账单用户关联表id
-
+        //calculate apportionment amount
+        /*每人均摊*/
+        BigDecimal apportionedAmount = amount.divide(BigDecimal.valueOf(userBillAssociationReqs.size()));
+        log.info("default allocation method is 'AA' ，apportioned amount is : {}", apportionedAmount);
+        //check participating user information
         for (UserBillAssociationReq userBillAssociationReq : userBillAssociationReqs) {
+            if (userBillAssociationReq.getUserId() == null || userBillAssociationReq.getUserParticipationType() == null) {
+                throw new CustomException(ResultCode.BILL_PARAMETER_BE_EMPTY);
+            }
             UserBillAssociation userBillAssociation = new UserBillAssociation();
-            BeanUtils.copyProperties(userBillAssociationReq,userBillAssociation);
-            long userbillid = NumberGenerator.getNumber(9);
+            BeanUtils.copyProperties(userBillAssociationReq, userBillAssociation);
+            long userbillid = NumberGenerator.getNumber(12);
             userBillAssociation.setAssociationId(userbillid);
+            userBillAssociation.setApportionedAmount(apportionedAmount);
             userBillAssociation.setBillingId(billid);
+            userBillAssociation.setPaymentStatus(DEFAULT_PAYMENT_STATUS);
             userBillAssociations.add(userBillAssociation);
-            log.info("assciotionEntity.getUserId()的值"+userBillAssociation.getUserId());
         }
+        log.info("userBillAssociation final save list [{}]", userBillAssociations);
         return userBillAssociationMapper.addUserBillAssociation(userBillAssociations);
+    }
+
+    @Override
+    public List<QueryBillDetailResp> findBillDetail(QueryBillDetailReq req) {
+
+        Long billingId = Long.valueOf(req.getBillingId());
+
+        //获取查询信息
+        List<QueryBillDetailResp> billDetails = billingMapper.findBillDetail(req);
+        /*如果查询为0，则用户未参与该账单，无法查询*/
+        if (billDetails.size() == 0) {
+            throw new CustomException(ResultCode.FIND_BILL_DETAIL_ERROR);
+        }
+        ;
+
+        return billDetails;
+    }
+
+
+
+
+    @Override
+    public QueryBillingInfoResp queryUserBillingInfo(QueryBillingInfoReq queryBillingInfoReq) {
+        Integer pageNo = queryBillingInfoReq.getPageNo();
+        Integer pageSize = queryBillingInfoReq.getPageSize();
+        if (pageSize > 30) {
+            throw new CustomException(ResultCode.BILL_PAGESIZE_MAX);
+        }
+
+        Page page = PageHelper.startPage(pageNo, pageSize);
+        log.info("queryUserBillingInfo方法的page信息:", page.getPageNum() + page.getPageSize());
+    /*    List<QueryUserResp> queryUserResps = billingMapper.queryUserByNamePhone(queryBillingInfoReq);
+        QueryUserAndTotalResp queryUserAndTotalResp =   new QueryUserAndTotalResp();
+        queryUserAndTotalResp.setTotalNum(page.getTotal());
+        queryUserAndTotalResp.setUserInfoByNamePhone(queryUserResps);*/
+        return null;
     }
 
 

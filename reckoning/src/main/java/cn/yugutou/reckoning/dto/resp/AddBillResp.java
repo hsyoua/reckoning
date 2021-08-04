@@ -6,5 +6,8 @@ import java.io.Serializable;
 
 @Data
 public class AddBillResp implements Serializable {
-    private boolean result;
+    private Long billid;
+    public AddBillResp(Long billid){
+        this.billid = billid;
+    }
 }

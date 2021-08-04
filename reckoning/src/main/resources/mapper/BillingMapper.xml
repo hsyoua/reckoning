@@ -30,46 +30,59 @@
     <!--新增账单-->
     <insert id="addBill" parameterType="cn.yugutou.reckoning.dao.entity.BillingInfo">
         insert into billing_info values
-        (#{billingId},#{amount},#{peopleNum},#{billingStatus},#{allocationMethod},#{consumptionNotes},#{consumerAddress},null,#{dissipate},now(),now());
-          /*获取插入数据的主键*/
-<!--        <selectKey keyProperty="billingId" order="AFTER"  resultType="java.lang.Long">-->
-<!--            select LAST_INSERT_ID()-->
-<!--        </selectKey>-->
+        (#{billingId},#{amount},#{peopleNum},#{billingStatus},#{allocationMethod},#{consumptionNotes},#{consumerAddress},#{createUserId},#{dissipate},now(),now(),#{billTheme});
+        /*获取插入数据的主键*/
+        <!--        <selectKey keyProperty="billingId" order="AFTER"  resultType="java.lang.Long">-->
+        <!--            select LAST_INSERT_ID()-->
+        <!--        </selectKey>-->
     </insert>
 
 
+    <!--    查询账单详情-->
+    <select id="findBillDetail" parameterType="map" resultMap="billDetail">
+
+        SELECT
+            a.billing_id,
+            a.bill_theme,
+            a.amount,
+            a.people_num,
+            a.billing_status,
+            a.allocation_method,
+            a.consumption_notes,
+            a.consumer_address,
+            a.create_user_id,
+            a.dissipate,
+            b.user_id,
+            b.user_participation_type,
+            b.apportioned_amount,
+            b.payment_status
+        FROM
+            billing_info a
+                LEFT JOIN usr_bill_association b ON a.billing_id = b.billing_id  where a.billing_id = #{billingId}
+            and exists (select 1 from usr_bill_association c where c.billing_id =#{billingId}
+            and c.user_id = #{userId})
+
+    </select>
+    <resultMap id="billDetail" type="queryBillDetailResp">
+        <id column="billing_id" property="billingId" javaType="Long"/>
+        <result column="amount" property="amount" javaType="BigDecimal"/>
+        <result column="people_num" property="peopleNum" javaType="Integer"/>
+        <result column="billing_status" property="billingStatus" javaType="String"/>
+        <result column="allocation_method" property="allocationMethod" javaType="String"/>
+        <result column="consumption_notes" property="consumptionNotes" javaType="String"/>
+        <result column="consumer_address" property="consumerAddress" javaType="String"/>
+        <result column="create_user_id" property="createUserId" javaType="Long"/>
+        <result column="dissipate" property="dissipate" javaType="Date"/>
+        <result column="bill_theme" property="billTheme" javaType="String"/>
+        <collection property="conSumeList" ofType="consumeDetailResp">
+            <id column="user_id" property="userId"></id>
+            <id column="user_participation_type" property="userParticipationType"></id>
+            <id column="apportioned_amount" property="apportionedAmount"></id>
+            <id column="payment_status" property="paymentStatus"></id>
+        </collection>
+    </resultMap>
+
+    <select id="queryUserBillingInfo" parameterType="queryBillingInfoReq" resultType="userBillingInfoResp"></select>
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
 </mapper>

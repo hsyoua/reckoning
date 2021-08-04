@@ -15,7 +15,7 @@ public class CheckUtil {
             return false;
         }else{
             /**
-             * 移动号段正则表达式
+             * 移动号段正则表达式1
              */
             String pat1 = "^((13[4-9])|(147)|(15[0-2,7-9])|(17[2,8])|(18[2-4,7-8])|(198))\\d{8}|(1705)\\d{7}$";
 
@@ -63,5 +63,19 @@ public class CheckUtil {
             }
             return false;
         }
+    }
+
+    /**
+     * 校验接收的参数是不是数字
+     * @param str
+     * @return
+     */
+    public static boolean isNumeric(String str) {
+        for (int i = 0; i < str.length(); i++) {
+            if(!Character.isDigit(str.charAt(i))){
+                return false;
+            }
+        }
+        return true;
     }
 }

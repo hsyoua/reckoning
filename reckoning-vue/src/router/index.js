@@ -5,38 +5,38 @@ import login from '../views/Login'
 Vue.use(VueRouter)
 
 const routes = [{
-    path: '/login',
+    path: '/',
     name: 'login',
     component: login
   },
   {
-    path: '//',
-    name:'home',
+    path: '/home',
+    name: 'home',
     component: () => import('@/views'),
     meta: {
       tiltle: '首页'
     },
     redirect: 'index',
-    children: [
-      {
-        path: 'index',
+    children: [{
+        path: '/index',
         name: 'index',
         component: () => import('@/views/Home'),
       },
       {
-        path: 'compoment1',
-        name: 'compoment1',
-        component: () => import('@/views/compoments/compoment1'),
+        path: '/bill',
+        name: 'bill',
+        component: () => import('@/views/Bill'),
         meta: {
-          tiltle: '第一个页面'
+          tiltle: '我的账单'
         },
       },
       {
-        path: 'compoment2',
-        name: 'compoment2',
-        component: () => import('@/views/compoments/compoment2'),
+        path: '/billingAdd',
+        name: 'billingAdd',
+        component: () => import('@/views/Bill/billingAdd.vue'),
         meta: {
-          tiltle: '第二个页面'
+          tiltle: '新增账单',
+          keepAlive:true,
         },
       },
     ]
@@ -55,5 +55,22 @@ const router = new VueRouter({
   base: process.env.BASE_URL,
   routes
 })
+
+// // 导航守卫
+// // 使用 router.beforeEach 注册一个全局前置守卫，判断用户是否登陆
+// router.beforeEach((to, from, next) => {
+//   if (to.path === '/') {
+//     next();
+//   } else {
+//     //非跳转到登录界面时，判断本地存储userData是否为null或空，为空则跳回到登录界面，反之到相应的界面(此时有数据)。
+//     let userData = JSON.parse(sessionStorage.getItem('userData'));
+//     if (userData === null || userData === '') {
+//       next('/');
+//     } else {
+//       next();
+//     }
+//   }
+// });
+
 
 export default router

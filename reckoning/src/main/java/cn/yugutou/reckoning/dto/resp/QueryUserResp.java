@@ -3,10 +3,12 @@ package cn.yugutou.reckoning.dto.resp;
 import lombok.Data;
 
 import java.io.Serializable;
+
 @Data
-public class LoginResp implements Serializable {
+public class QueryUserResp implements Serializable {
+    private  Long userId;
     private String userName;
-    private Long userId;
     private String userRemarks;
-    private Integer errorNum;
+    private  String mobileNo;
+
 }

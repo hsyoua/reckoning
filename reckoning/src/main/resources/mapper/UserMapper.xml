@@ -19,12 +19,22 @@
         <result column="last_login_time" property="lastLoginTime" javaType="Date"/>
         <result column="create_time" property="createTime" javaType="Date"/>
         <result column="modify_time" property="modifyTime" javaType="Date"/>
+        <result column="user_status" property="userStatus" javaType="String"/>
+        <result column="password_error_num" property="passwordErrorNum" javaType="Integer"/>
+    </resultMap>
+
+
+    <resultMap id="queryResultMap" type="cn.yugutou.reckoning.dto.resp.QueryUserResp">
+        <id column="user_id" property="userId" javaType="Long"/>
+        <result column="user_name" property="userName" javaType="String"/>
+        <result column="mobile_no" property="mobileNo" javaType="String"/>
+        <result column="user_remarks" property="userRemarks" javaType="String"/>
     </resultMap>
     <sql id="selectAll">
-        user_id,user_name,password,mobile_no,user_role,user_remarks,last_login_time,create_time,modify_time
+        user_id,user_name,password,mobile_no,user_role,user_remarks,last_login_time,create_time,modify_time,user_status,password_error_num
     </sql>
     <insert id="saveUser" parameterType="cn.yugutou.reckoning.dao.entity.UsrInfo" >
-        insert into usr_info values (#{userId},#{password},#{userName},#{mobileNo},#{userRole},#{userRemark},null,now(),now())
+        insert into usr_info values (#{userId},#{password},#{userName},#{mobileNo},#{userRole},#{userRemarks},null,now(),now(),#{userStatus},#{passwordErrorNum})
     </insert>
     <select id="queryUsrInfoByPhone" parameterType="java.lang.String" resultMap="BaseRsultMap">
         select
@@ -33,6 +43,58 @@
         where mobile_no = #{mobileNo}
     </select>
     <update id="updateLoginTime" parameterType="java.lang.Long">
-        update usr_info set last_login_time = now() , modify_time = now() where user_id = #{userId};
+        update usr_info set last_login_time = now() , modify_time = now(),password_error_num = 0 where user_id = #{userId};
+    </update>
+    <update id="frozenStatusById">
+        update usr_info set password_error_num = #{errorNum} , modify_time = now(),user_status = "02" where user_id = #{userId};
+    </update>
+
+    <update id="updateErrorNumById">
+        update usr_info set password_error_num = #{errorNum} , modify_time = now() where user_id = #{userId};
+    </update>
+    <!--对用户名和手机号进行模糊查询-->
+    <select id="queryUserByNamePhone" parameterType="cn.yugutou.reckoning.dto.req.QueryUserReq" resultMap="queryResultMap">
+
+        select
+            user_id,user_name,mobile_no,user_remarks
+        from usr_info
+        where  user_name like  concat('%', #{keyWord}, '%')   or  mobile_no like    concat('%', #{keyWord}, '%')
+
+    </select>
+
+
+<!--    修改密码-->
+    <update id="updateUserPassword" parameterType="cn.yugutou.reckoning.dto.req.UpdatePassReq">
+        update usr_info set password = #{newPass} , modify_time =now() where  user_id= #{userId}
+    </update>
+    
+    
+<!--    查询用户详情-->
+    <select id="queryUserDetail" parameterType="java.lang.Long" resultMap="BaseRsultMap">
+        select
+        <include refid="selectAll"></include>
+        from usr_info
+        where  user_id =  #{id}
+
+    </select>
+
+
+<!--    用户更新自己的用户信息-->
+    <update id="updateUserinfoSelf" parameterType="cn.yugutou.reckoning.dao.entity.UsrInfo" >
+        update usr_info
+        <set>
+
+            <if test="userName !=null and userName != ''">
+                user_name=#{userName},
+            </if>
+            <if test="mobileNo !=null and mobileNo != ''">
+                mobile_no=#{mobileNo},
+            </if>
+            <if test="userRemarks !=null and userRemarks != ''">
+                user_remarks=#{userRemarks},
+            </if>
+            modify_time = now(),
+        </set>
+            where user_id = #{userId}
     </update>
 </mapper>
