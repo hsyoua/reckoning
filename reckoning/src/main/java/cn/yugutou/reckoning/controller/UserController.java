@@ -45,36 +45,35 @@ public class UserController {
 
     //通过用户名或者手机号模糊查询用户
     @PostMapping(value = "/queryUser",produces = "application/json;charset=UTF-8")
-    public ResponseEntity queryUserByNameAndPhone(@RequestBody @Validated QueryUserReq queryUserReq){
+    public Result<QueryUserAndTotalResp> queryUserByNameAndPhone(@RequestBody @Validated QueryUserReq queryUserReq){
         log.info("controller pageNo and pageSize :"+ queryUserReq.getPageNo()+","+queryUserReq.getPageSize());
         QueryUserAndTotalResp queryUserAndTotalResp = userService.queryUserByNamePhone(queryUserReq);
-        return new ResponseEntity(queryUserAndTotalResp,HttpStatus.OK);
+        return Result.success(queryUserAndTotalResp);
     }
 
 
     //修改密码
     @PostMapping(value = "/updatePassword",produces = "application/json;charset=UTF-8")
-    public ResponseEntity<UpdatePassResp>  updatePasswordController(@RequestBody @Validated  UpdatePassReq updatePassReq){
+    public Result<UpdatePassResp>  updatePasswordController(@RequestBody @Validated  UpdatePassReq updatePassReq){
         Result result = userService.updateUserPassword(updatePassReq);
-
-        return new ResponseEntity(result,HttpStatus.OK);
+        return result;
 
     }
 
     @GetMapping (value = "/queryUserDetail",produces = "application/json;charset=UTF-8")
-    public ResponseEntity  queryUserDetailController( Long id){
+    public Result<UsrInfo>  queryUserDetailController( Long id){
         UsrInfo usrInfo =  userService.queryUserDetail(id);
-
-        return new ResponseEntity(usrInfo,HttpStatus.OK);
+        return Result.success(usrInfo);
 
     }
 
     @PostMapping (value = "/updateUser",produces = "application/json;charset=UTF-8")
-    public ResponseEntity  updateUserSelfController(@RequestBody @Validated UpdateUserInfoReq updateUserInfoReq){
+    public Result  updateUserSelfController(@RequestBody @Validated UpdateUserInfoReq updateUserInfoReq){
         boolean result = userService.updateUserinfoSelf(updateUserInfoReq);
-
-        return new ResponseEntity(result,HttpStatus.OK);
-
+        if(result){
+            return Result.success();
+        }
+        return Result.failure();
     }
 
 
