@@ -3,10 +3,13 @@ package cn.yugutou.reckoning.dto.req;
 
 
 import lombok.Data;
+import org.apache.ibatis.type.Alias;
+
 import java.io.Serializable;
 import java.util.Date;
 
 @Data
+@Alias("queryBillingInfoReq")
 public class QueryBillingInfoReq implements Serializable {
     //用户ID
     private Integer userId;

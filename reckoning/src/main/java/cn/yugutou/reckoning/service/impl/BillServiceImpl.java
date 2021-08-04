@@ -6,21 +6,20 @@ import cn.yugutou.reckoning.dao.mapper.BillingMapper;
 import cn.yugutou.reckoning.dao.mapper.UserBillAssociationMapper;
 import cn.yugutou.reckoning.dto.req.BillReq;
 import cn.yugutou.reckoning.dto.req.QueryBillDetailReq;
+import cn.yugutou.reckoning.dto.req.QueryBillingInfoReq;
 import cn.yugutou.reckoning.dto.req.UserBillAssociationReq;
 import cn.yugutou.reckoning.dto.resp.QueryBillDetailResp;
+import cn.yugutou.reckoning.dto.resp.QueryBillingInfoResp;
 import cn.yugutou.reckoning.exception.CustomException;
 import cn.yugutou.reckoning.exception.ResultCode;
 import cn.yugutou.reckoning.service.BillService;
 import cn.yugutou.reckoning.utils.NumberGenerator;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -95,6 +94,23 @@ public class BillServiceImpl implements BillService {
 
 
 
+
+    @Override
+    public QueryBillingInfoResp queryUserBillingInfo(QueryBillingInfoReq queryBillingInfoReq) {
+        Integer pageNo = queryBillingInfoReq.getPageNo();
+        Integer pageSize = queryBillingInfoReq.getPageSize();
+        if (pageSize > 30) {
+            throw new CustomException(ResultCode.BILL_PAGESIZE_MAX);
+        }
+
+        Page page = PageHelper.startPage(pageNo, pageSize);
+        log.info("queryUserBillingInfo方法的page信息:", page.getPageNum() + page.getPageSize());
+    /*    List<QueryUserResp> queryUserResps = billingMapper.queryUserByNamePhone(queryBillingInfoReq);
+        QueryUserAndTotalResp queryUserAndTotalResp =   new QueryUserAndTotalResp();
+        queryUserAndTotalResp.setTotalNum(page.getTotal());
+        queryUserAndTotalResp.setUserInfoByNamePhone(queryUserResps);*/
+        return null;
+    }
 
 
 }

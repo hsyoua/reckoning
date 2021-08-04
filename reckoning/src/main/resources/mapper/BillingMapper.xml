@@ -82,5 +82,7 @@
         </collection>
     </resultMap>
 
+    <select id="queryUserBillingInfo" parameterType="queryBillingInfoReq" resultType="userBillingInfoResp"></select>
+
 
 </mapper>
