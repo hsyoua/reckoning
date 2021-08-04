@@ -62,8 +62,7 @@ public class UserController {
 
     @GetMapping (value = "/queryUserDetail",produces = "application/json;charset=UTF-8")
     public Result<UsrInfo>  queryUserDetailController( Long id){
-        UsrInfo usrInfo =  userService.queryUserDetail(id);
-        return Result.success(usrInfo);
+        return userService.queryUserDetail(id);
 
     }
 

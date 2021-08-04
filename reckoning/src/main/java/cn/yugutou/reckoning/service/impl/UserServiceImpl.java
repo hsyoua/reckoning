@@ -131,9 +131,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UsrInfo queryUserDetail(Long id) {
+    public Result queryUserDetail(Long id) {
         log.info("user id [{}]",id);
-        return userMapper.queryUserDetail(id);
+        UsrInfo usrInfo = userMapper.queryUserDetail(id);
+        Result result =null;
+        if(usrInfo == null){
+          result = Result.failure();
+        }else {
+            result = Result.success(usrInfo);
+        }
+        return result;
     }
 
     @Override

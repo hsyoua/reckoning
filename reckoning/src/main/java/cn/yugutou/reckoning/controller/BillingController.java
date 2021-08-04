@@ -7,6 +7,7 @@ import cn.yugutou.reckoning.dto.resp.QueryBillDetailResp;
 import cn.yugutou.reckoning.dto.resp.QueryBillingInfoResp;
 import cn.yugutou.reckoning.service.BillService;
 import cn.yugutou.reckoning.service.UserService;
+import cn.yugutou.reckoning.utils.Result;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -38,8 +39,13 @@ public class BillingController {
         log.info("controller 层 userid"+String.valueOf(userBillAssociationReqs.get(0)));
         billService.addUserBillAssociation(userBillAssociationReqs,billid,amount);
         AddBillResp resp = new AddBillResp(billid);
-
-        return new ResponseEntity(resp,HttpStatus.OK);
+        Result result = null;
+         if (resp != null){
+             result = Result.success(resp);
+         }else {
+             result = Result.failure();
+         }
+        return new ResponseEntity(result,HttpStatus.OK);
     }
 
     //查询用户账单信息(未完成)
@@ -59,7 +65,13 @@ public class BillingController {
     @PostMapping (value = "/fingBillDetail",produces = "application/json;charset=UTF-8")
     public ResponseEntity  fingBillDetail(@RequestBody @Validated QueryBillDetailReq request){
         List<QueryBillDetailResp> billDetails = billService.findBillDetail(request);
-        return new ResponseEntity(billDetails,HttpStatus.OK);
+        Result result = null;
+        if (billDetails != null){
+            result = Result.success(billDetails);
+        }else {
+            result = Result.failure();
+        }
+        return new ResponseEntity(result,HttpStatus.OK);
 
     }
 
