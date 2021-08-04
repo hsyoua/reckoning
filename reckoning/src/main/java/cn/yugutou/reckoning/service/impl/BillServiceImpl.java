@@ -10,6 +10,7 @@ import cn.yugutou.reckoning.dto.req.QueryBillingInfoReq;
 import cn.yugutou.reckoning.dto.req.UserBillAssociationReq;
 import cn.yugutou.reckoning.dto.resp.QueryBillDetailResp;
 import cn.yugutou.reckoning.dto.resp.QueryBillingInfoResp;
+import cn.yugutou.reckoning.dto.resp.UserBillingInfoResp;
 import cn.yugutou.reckoning.exception.CustomException;
 import cn.yugutou.reckoning.exception.ResultCode;
 import cn.yugutou.reckoning.service.BillService;
@@ -105,11 +106,11 @@ public class BillServiceImpl implements BillService {
 
         Page page = PageHelper.startPage(pageNo, pageSize);
         log.info("queryUserBillingInfo方法的page信息:", page.getPageNum() + page.getPageSize());
-    /*    List<QueryUserResp> queryUserResps = billingMapper.queryUserByNamePhone(queryBillingInfoReq);
-        QueryUserAndTotalResp queryUserAndTotalResp =   new QueryUserAndTotalResp();
-        queryUserAndTotalResp.setTotalNum(page.getTotal());
-        queryUserAndTotalResp.setUserInfoByNamePhone(queryUserResps);*/
-        return null;
+        List<UserBillingInfoResp> userBillingInfoRespList =  billingMapper.queryUserBillingInfo(queryBillingInfoReq);
+        QueryBillingInfoResp queryBillingInfoResp = new QueryBillingInfoResp();
+        queryBillingInfoResp.setUserBillingInfo(userBillingInfoRespList);
+        queryBillingInfoResp.setTotals(page.getTotal());
+        return queryBillingInfoResp;
     }
 
 

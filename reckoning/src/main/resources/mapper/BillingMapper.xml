@@ -82,7 +82,36 @@
         </collection>
     </resultMap>
 
-    <select id="queryUserBillingInfo" parameterType="queryBillingInfoReq" resultType="userBillingInfoResp"></select>
+    <select id="queryUserBillingInfo" parameterType="queryBillingInfoReq" resultType="userBillingInfoResp">
+        SELECT
+            bi.billing_id,
+            bi.amount,
+            bi.bill_theme,
+            bi.people_num,
+            bi.billing_status,
+            bi.dissipate
+        FROM
+            billing_info bi
+        WHERE
+            bi.dissipate BETWEEN STR_TO_DATE('2021-06-29 15:30:00','%Y-%m-%d %H:%i:%s') AND STR_TO_DATE('2021-06-30 17:30:00','%Y-%m-%d %H:%i:%s')
+          AND bi.bill_theme = ?
+          AND bi.billing_status = ?
+          AND bi.allocation_method = ?
+          AND bi.people_num = ?
+          AND bi.amount = ?
+          AND EXISTS (
+                SELECT
+                    1
+                FROM
+                    usr_bill_association u
+                WHERE
+                    bi.billing_id = u.billing_id
+                  AND u.user_participation_type = ?
+                  AND u.payment_status = ?
+                  AND u.apportioned_amount = ?
+                  AND u.billing_id = ?
+            )
+    </select>
 
 
 </mapper>
