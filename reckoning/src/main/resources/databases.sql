@@ -67,7 +67,7 @@ drop table if exists review_info;
 CREATE TABLE `review_info` (
                                `review_id` bigint(12) NOT NULL COMMENT '审核id',
                                `reviewer_id` INTEGER(9) NOT NULL COMMENT '审核人id',
-                               `billing_id` INTEGER(9) NOT NULL COMMENT '账单id',
+                               `billing_id` bigint(9) NOT NULL COMMENT '账单id',
                                `review_time` datetime default NULL COMMENT '审核时间',
                                `review_status` VARCHAR(2) not null COMMENT '审核状态：00-待审核、01-审核通过、02-审核拒绝',
                                `rejection_reason` VARCHAR(300) DEFAULT NULL COMMENT '拒绝原因：当审核拒绝时，拒绝原因不能为空',

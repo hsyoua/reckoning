@@ -5,4 +5,17 @@
 <!-- namespace:填写映射当前的Mapper接口，所有的增删改查的参数和返回值类型，
 		就可以直接填写缩写，不区分大小写，直接通过方法名去找类型-->
 <mapper namespace="cn.yugutou.reckoning.dao.mapper.ReviewMapper">
+
+    <select id="selectAll">
+        review_id
+        ,reviewer_id,billing_id,review_time,review_status,rejection_reason,create_time,modify_time
+    </select>
+
+    <!--    新增需求，新增账单时同步插入审核表-->
+    <insert id="addReviewInfo" parameterType="reviewInfo">
+        insert into review_info
+        values (#{reviewId}, #{reviewerId}, #{billingId}, null, #{reviewStatus}, null,
+                now(), now())
+    </insert>
+
 </mapper>

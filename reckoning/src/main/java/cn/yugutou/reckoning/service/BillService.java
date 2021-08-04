@@ -19,7 +19,7 @@ public interface BillService {
     /**
      * 新增账单用户关联信息
      */
-    boolean addUserBillAssociation(List<UserBillAssociationReq> userBillAssociationReqs, Long billid, BigDecimal amount);
+    Long addUserBillAssociation(List<UserBillAssociationReq> userBillAssociationReqs, Long billid, BigDecimal amount);
 
     /**
      * 查询账单详细信息

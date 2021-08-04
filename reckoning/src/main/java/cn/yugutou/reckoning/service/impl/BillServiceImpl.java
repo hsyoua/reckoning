@@ -1,9 +1,13 @@
 package cn.yugutou.reckoning.service.impl;
 
 import cn.yugutou.reckoning.dao.entity.BillingInfo;
+import cn.yugutou.reckoning.dao.entity.ReviewInfo;
 import cn.yugutou.reckoning.dao.entity.UserBillAssociation;
+import cn.yugutou.reckoning.dao.entity.UsrInfo;
 import cn.yugutou.reckoning.dao.mapper.BillingMapper;
+import cn.yugutou.reckoning.dao.mapper.ReviewMapper;
 import cn.yugutou.reckoning.dao.mapper.UserBillAssociationMapper;
+import cn.yugutou.reckoning.dao.mapper.UserMapper;
 import cn.yugutou.reckoning.dto.req.BillReq;
 import cn.yugutou.reckoning.dto.req.QueryBillDetailReq;
 import cn.yugutou.reckoning.dto.req.QueryBillingInfoReq;
@@ -13,6 +17,7 @@ import cn.yugutou.reckoning.dto.resp.QueryBillingInfoResp;
 import cn.yugutou.reckoning.exception.CustomException;
 import cn.yugutou.reckoning.exception.ResultCode;
 import cn.yugutou.reckoning.service.BillService;
+import cn.yugutou.reckoning.service.UserService;
 import cn.yugutou.reckoning.utils.NumberGenerator;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
@@ -20,6 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -27,6 +33,7 @@ import java.util.List;
 
 @Service("BillService")
 @Slf4j
+@Transactional
 public class BillServiceImpl implements BillService {
 
     @Autowired
@@ -34,6 +41,10 @@ public class BillServiceImpl implements BillService {
 
     @Autowired
     private UserBillAssociationMapper userBillAssociationMapper;
+
+    @Autowired
+    private UserMapper userMapper;
+
 
     private final static String DEFAULT_PAYMENT_STATUS = "01";
     private final static String DEFAULT_BILLING_STATUS = "01";
@@ -43,7 +54,9 @@ public class BillServiceImpl implements BillService {
         BillingInfo billingInfo = new BillingInfo();
         BeanUtils.copyProperties(billReq, billingInfo);
         //获取账单id
-        long billid = NumberGenerator.getNumber(12);
+        Long billid = NumberGenerator.getNumber(12);
+
+
 
         billingInfo.setBillingId(billid);
         billingInfo.setBillingStatus(DEFAULT_BILLING_STATUS);
@@ -52,7 +65,7 @@ public class BillServiceImpl implements BillService {
     }
 
     @Override
-    public boolean addUserBillAssociation(List<UserBillAssociationReq> userBillAssociationReqs, Long billid, BigDecimal amount) {
+    public Long addUserBillAssociation(List<UserBillAssociationReq> userBillAssociationReqs, Long billid, BigDecimal amount) {
         ArrayList<UserBillAssociation> userBillAssociations = new ArrayList<>();
         //calculate apportionment amount
         /*每人均摊*/
@@ -60,9 +73,17 @@ public class BillServiceImpl implements BillService {
         log.info("default allocation method is 'AA' ，apportioned amount is : {}", apportionedAmount);
         //check participating user information
         for (UserBillAssociationReq userBillAssociationReq : userBillAssociationReqs) {
-            if (userBillAssociationReq.getUserId() == null || userBillAssociationReq.getUserParticipationType() == null) {
+            //入参的用户id和用户参与类型不能为空
+            Long userId = userBillAssociationReq.getUserId();
+            if (userId == null || userBillAssociationReq.getUserParticipationType() == null) {
                 throw new CustomException(ResultCode.BILL_PARAMETER_BE_EMPTY);
             }
+            //判断入参的用户id在用户表是否存在
+            UsrInfo usrInfo = userMapper.queryUserDetail(userId);
+            if (usrInfo == null) {
+                return userId;
+            }
+
             UserBillAssociation userBillAssociation = new UserBillAssociation();
             BeanUtils.copyProperties(userBillAssociationReq, userBillAssociation);
             long userbillid = NumberGenerator.getNumber(12);
@@ -73,7 +94,8 @@ public class BillServiceImpl implements BillService {
             userBillAssociations.add(userBillAssociation);
         }
         log.info("userBillAssociation final save list [{}]", userBillAssociations);
-        return userBillAssociationMapper.addUserBillAssociation(userBillAssociations);
+        userBillAssociationMapper.addUserBillAssociation(userBillAssociations);
+        return null;
     }
 
     @Override
@@ -91,8 +113,6 @@ public class BillServiceImpl implements BillService {
 
         return billDetails;
     }
-
-
 
 
     @Override

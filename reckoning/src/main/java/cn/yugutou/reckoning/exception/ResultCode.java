@@ -33,7 +33,9 @@ public enum ResultCode {
     //账单模块错误码 50300~50399
     BILL_PARAMETER_BE_EMPTY(50300,"Billing participating user information cannot be blank"),
     FIND_BILL_DETAIL_ERROR(50301,"您未参与该账单，无法查看"),
-    BILL_PAGESIZE_MAX(50302,"查询失败，查询条数最多30条");
+    BILL_PAGESIZE_MAX(50302,"查询失败，查询条数最多30条"),
+    BILL_USERID_ERROR(50303,"当前账单存在用户id错误，请检查"),
+    BILL_REVIEW_INSERT(50304,"审核表插入异常，审核人id不存在");
 
     private final Integer code;
     private final String message;
