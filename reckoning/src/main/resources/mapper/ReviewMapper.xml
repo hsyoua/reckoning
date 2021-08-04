@@ -17,5 +17,28 @@
         values (#{reviewId}, #{reviewerId}, #{billingId}, null, #{reviewStatus}, null,
                 now(), now())
     </insert>
+    <!--  查询待审核列表-->
+    <select id="findReviewWaiting" resultMap="reviewMap">
+        select
+        distinct b.review_id,a.billing_id,a.bill_theme,a.dissipate
+        from billing_info a left join review_info b
+        on a.billing_id =b.billing_id
+        left join usr_bill_association c
+        on a.billing_id =c.billing_id
+        <where>
+            <if test="userId !='' || userId != null">
+                c.user_id =#{userId}
 
+            </if>
+
+            and b.review_status='00'
+        </where>
+    </select>
+
+    <resultMap id="reviewMap" type="reviewWaitingResp">
+        <id column="review_id" property="reviewId" javaType="Long"/>
+        <result column="billing_id" property="billingId" javaType="Long"/>
+        <result column="bill_theme" property="billTheme" javaType="String"/>
+        <result column="dissipate" property="dissipate" javaType="Date"/>
+    </resultMap>
 </mapper>
