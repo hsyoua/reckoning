@@ -60,22 +60,26 @@ public class UserServiceImpl implements UserService {
         if(!"01".equals(usrInfo.getUserStatus())) {
             throw new CustomException(ResultCode.USER_STATUS_EXCEPTION);
         }
+        LoginResp loginResp = new LoginResp();
         //check user login password
         if(!StringUtils.equals(loginReq.getPassword(),usrInfo.getPassword())){
             int errorNum = usrInfo.getPasswordErrorNum();
             if(++errorNum>=5){
                 //update userStatus frozen
                 userMapper.frozenStatusById(usrInfo.getUserId(),errorNum);
+                loginResp.setErrorNum(0);
             }else {
                 //update errorNum
                 userMapper.updateErrorNumById(usrInfo.getUserId(),errorNum);
+                //Error five times, the account will be frozen
+                Integer remainingTimes = 5 - errorNum;
+                loginResp.setErrorNum(remainingTimes);
             }
-            throw new CustomException(ResultCode.USER_LOGIN_CHECK_FAIL);
+            return loginResp;
         }
         //update last login time;
         userMapper.updateLoginTime(usrInfo.getUserId());
         log.info("user login success!");
-        LoginResp loginResp = new LoginResp();
         BeanUtils.copyProperties(usrInfo,loginResp);
         return loginResp;
 

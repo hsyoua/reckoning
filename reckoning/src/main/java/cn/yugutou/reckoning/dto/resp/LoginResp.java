@@ -8,4 +8,5 @@ public class LoginResp implements Serializable {
     private String userName;
     private Long userId;
     private String userRemarks;
+    private Integer errorNum;
 }

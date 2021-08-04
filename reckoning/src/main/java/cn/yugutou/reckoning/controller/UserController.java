@@ -3,6 +3,7 @@ package cn.yugutou.reckoning.controller;
 import cn.yugutou.reckoning.dao.entity.UsrInfo;
 import cn.yugutou.reckoning.dto.req.*;
 import cn.yugutou.reckoning.dto.resp.*;
+import cn.yugutou.reckoning.exception.ResultCode;
 import cn.yugutou.reckoning.utils.Result;
 import cn.yugutou.reckoning.service.UserService;
 import lombok.extern.slf4j.Slf4j;
@@ -22,20 +23,22 @@ public class UserController {
     private UserService userService;
 
     @PostMapping(value = "/register",produces="application/json;charset=UTF-8")
-    public ResponseEntity<RegisterResp> registerUser(@RequestBody @Validated RegisterReq requset){
+    public Result<RegisterResp> registerUser(@RequestBody @Validated RegisterReq requset){
         boolean result = userService.registerUser(requset);
-        RegisterResp resp = new RegisterResp();
-        resp.setResult(result);
-        if(!result){
-            return new ResponseEntity<>(resp,HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-        return new ResponseEntity<>(resp,HttpStatus.OK);
+        RegisterResp resp = new RegisterResp(result);
+        return Result.success(resp);
     }
 
     @PostMapping(value = "/login",produces = "application/json;charset=UTF-8")
     public Result<LoginResp> login(@RequestBody @Validated LoginReq loginReq){
         log.info("login request is [{}]",loginReq);
         LoginResp loginResp = userService.login(loginReq);
+        if(loginResp.getErrorNum()!=null){
+            Result result = new Result();
+            result.setCode(ResultCode.USER_LOGIN_CHECK_FAIL.getCode());
+            result.setMessage("密码错误，剩余错误"+loginResp.getErrorNum()+"次后，账户将会冻结！");
+            return result;
+        }
         return Result.success(loginResp);
     };
 
