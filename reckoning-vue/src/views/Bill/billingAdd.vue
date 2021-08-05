@@ -180,6 +180,7 @@ export default {
       pageSize: 5,
       pageNo: 1,
       pramars: "",
+      userData:'',
     };
   },
   methods: {
@@ -199,19 +200,19 @@ export default {
             consumptionNotes: this.billFrom.consumptionNotes,
             userBillAssociationReqs: this.billFrom.userBillAssociationReqs,
             peopleNum: this.billFrom.userBillAssociationReqs.length,
-            createUserId: 214856282,
+            createUserId: this.userData.userId,
           };
 
           Api.addNewBill(billData).then((res) => {
             this.remoteMethod;
-            if (res.data.code === 20000) {
+            if (res.data.code === 200) {
               this.$message({
                 message: "新增成功",
                 type: "success",
               });
               this.$router.push("/home");
             }
-            if (!(res.data.code === 2000)) {
+            if (!(res.data.code === 200)) {
               this.$message({
                 message: res.data.message,
                 type: "error",
@@ -268,7 +269,7 @@ export default {
     //获取用户列表
     getUserList(pramars) {
       Api.userFound(pramars).then((res) => {
-        this.userOptions = res.data.userInfoByNamePhone;
+        this.userOptions = res.data.data.userInfoByNamePhone;
       });
     },
 
@@ -279,9 +280,9 @@ export default {
       this.getUserList(this.pramars);
     },
   },
-
   mounted() {
     this.restaurants = [];
+    this.userData = JSON.parse(sessionStorage.getItem("userData"));
   },
 };
 </script>

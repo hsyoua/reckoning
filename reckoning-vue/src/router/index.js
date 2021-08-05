@@ -4,8 +4,13 @@ import login from '../views/Login'
 
 Vue.use(VueRouter)
 
-const routes = [{
+const routes = [
+  {
     path: '/',
+    redirect: 'login',
+  },
+  {
+    path: '/login',
     name: 'login',
     component: login
   },
@@ -39,6 +44,15 @@ const routes = [{
           keepAlive:true,
         },
       },
+      {
+        path: '/userPage',
+        name: 'userPage',
+        component: () => import('@/views/UserPage'),
+        meta: {
+          tiltle: '个人中心',
+          keepAlive:true,
+        },
+      },
     ]
   },
 
@@ -56,21 +70,21 @@ const router = new VueRouter({
   routes
 })
 
-// // 导航守卫
-// // 使用 router.beforeEach 注册一个全局前置守卫，判断用户是否登陆
-// router.beforeEach((to, from, next) => {
-//   if (to.path === '/') {
-//     next();
-//   } else {
-//     //非跳转到登录界面时，判断本地存储userData是否为null或空，为空则跳回到登录界面，反之到相应的界面(此时有数据)。
-//     let userData = JSON.parse(sessionStorage.getItem('userData'));
-//     if (userData === null || userData === '') {
-//       next('/');
-//     } else {
-//       next();
-//     }
-//   }
-// });
+// 导航守卫
+// 使用 router.beforeEach 注册一个全局前置守卫，判断用户是否登陆
+router.beforeEach((to, from, next) => {
+  if (to.path === '/login') {
+    next();
+  } else {
+    //非跳转到登录界面时，判断本地存储userData是否为null或空，为空则跳回到登录界面，反之到相应的界面(此时有数据)。
+    let userData = JSON.parse(sessionStorage.getItem('userData'));
+    if (userData === null || userData === '') {
+      next('/login');
+    } else {
+      next();
+    }
+  }
+});
 
 
 export default router
