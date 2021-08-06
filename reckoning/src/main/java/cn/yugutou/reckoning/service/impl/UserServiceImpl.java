@@ -104,7 +104,7 @@ public class UserServiceImpl implements UserService {
             List<QueryUserResp> queryUserResps = userMapper.queryUserByNamePhone(queryUserReq);
         QueryUserAndTotalResp queryUserAndTotalResp =   new QueryUserAndTotalResp();
         queryUserAndTotalResp.setTotalNum(page.getTotal());
-        queryUserAndTotalResp.setUserInfoByNamePhone(queryUserResps);
+        queryUserAndTotalResp.setUserInfoList(queryUserResps);
             return queryUserAndTotalResp;
     }
 

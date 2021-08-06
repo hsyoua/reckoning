@@ -1,10 +1,14 @@
 package cn.yugutou.reckoning.service.impl;
 
+import cn.yugutou.reckoning.common.JWTUtil;
 import cn.yugutou.reckoning.dao.entity.ReviewInfo;
 import cn.yugutou.reckoning.dao.entity.UsrInfo;
 import cn.yugutou.reckoning.dao.mapper.ReviewMapper;
 import cn.yugutou.reckoning.dao.mapper.UserMapper;
 import cn.yugutou.reckoning.dto.resp.ReviewWaitingResp;
+import cn.yugutou.reckoning.exception.CustomException;
+import cn.yugutou.reckoning.exception.ResultCode;
+import cn.yugutou.reckoning.interceptor.RequestContext;
 import cn.yugutou.reckoning.service.ReviewService;
 import cn.yugutou.reckoning.utils.NumberGenerator;
 import lombok.extern.slf4j.Slf4j;
@@ -34,14 +38,19 @@ public class ReviewServiceImpl implements ReviewService {
     @Override
     public List<ReviewWaitingResp> findReviewWaiting(Long id) {
       //（用户只能查询自己作为审核人的待办账单任务，管理员可以查询所有待办账单任务
-
         UsrInfo usrInfo = userMapper.queryUserDetail(id);
+        if(usrInfo==null){
+            throw new CustomException(ResultCode.USER_NOT_EXISTS);
+        }
         //获取用户身份
         String userRole = usrInfo.getUserRole();
+        //check login userId
+        String userIdOfToken = JWTUtil.getUserId(RequestContext.get());
         if ("01".equals(userRole)){
             id = null;
+        }else if(id!=Long.parseLong(userIdOfToken)){
+         id = Long.parseLong(userIdOfToken);
         }
-
         return reviewMapper.findReviewWaiting(id);
     }
 }
