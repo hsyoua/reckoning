@@ -1,12 +1,10 @@
 package cn.yugutou.reckoning.controller;
 
-import cn.yugutou.reckoning.dto.req.UpdateUserInfoReq;
 import cn.yugutou.reckoning.dto.resp.ReviewWaitingResp;
 import cn.yugutou.reckoning.service.ReviewService;
-import cn.yugutou.reckoning.utils.Result;
+import cn.yugutou.reckoning.common.Result;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

@@ -9,4 +9,5 @@ public class LoginResp implements Serializable {
     private Long userId;
     private String userRemarks;
     private Integer errorNum;
+    private String token;
 }

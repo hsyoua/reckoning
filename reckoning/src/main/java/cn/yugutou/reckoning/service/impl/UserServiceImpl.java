@@ -1,5 +1,7 @@
 package cn.yugutou.reckoning.service.impl;
 
+import cn.yugutou.reckoning.common.JWTUtil;
+import cn.yugutou.reckoning.common.Result;
 import cn.yugutou.reckoning.dao.entity.UsrInfo;
 import cn.yugutou.reckoning.dao.mapper.UserMapper;
 import cn.yugutou.reckoning.dto.req.*;
@@ -7,7 +9,6 @@ import cn.yugutou.reckoning.dto.resp.LoginResp;
 import cn.yugutou.reckoning.dto.resp.QueryUserAndTotalResp;
 import cn.yugutou.reckoning.dto.resp.QueryUserResp;
 import cn.yugutou.reckoning.exception.CustomException;
-import cn.yugutou.reckoning.utils.Result;
 import cn.yugutou.reckoning.exception.ResultCode;
 import cn.yugutou.reckoning.service.UserService;
 import cn.yugutou.reckoning.utils.NumberGenerator;
@@ -56,6 +57,9 @@ public class UserServiceImpl implements UserService {
         //query userInfo by mobileNo
         log.debug("login user moblie no [{}]",loginReq.getMobileNo());
         UsrInfo usrInfo =  userMapper.queryUsrInfoByPhone(loginReq.getMobileNo());
+        if(usrInfo == null){
+            throw new CustomException(ResultCode.USER_NOT_EXISTS);
+        }
         //check user status
         if(!"01".equals(usrInfo.getUserStatus())) {
             throw new CustomException(ResultCode.USER_STATUS_EXCEPTION);
@@ -79,8 +83,10 @@ public class UserServiceImpl implements UserService {
         }
         //update last login time;
         userMapper.updateLoginTime(usrInfo.getUserId());
-        log.info("user login success!");
         BeanUtils.copyProperties(usrInfo,loginResp);
+        //set token
+        loginResp.setToken(JWTUtil.jwtCreate(String.valueOf(usrInfo.getUserId())));
+        log.info("user login success!");
         return loginResp;
 
     }
