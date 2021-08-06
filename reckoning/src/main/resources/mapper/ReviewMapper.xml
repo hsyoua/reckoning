@@ -6,10 +6,10 @@
 		就可以直接填写缩写，不区分大小写，直接通过方法名去找类型-->
 <mapper namespace="cn.yugutou.reckoning.dao.mapper.ReviewMapper">
 
-    <select id="selectAll">
+    <sql id="selectAll">
         review_id
         ,reviewer_id,billing_id,review_time,review_status,rejection_reason,create_time,modify_time
-    </select>
+    </sql>
 
     <!--    新增需求，新增账单时同步插入审核表-->
     <insert id="addReviewInfo" parameterType="reviewInfo">
@@ -26,11 +26,9 @@
         left join usr_bill_association c
         on a.billing_id =c.billing_id
         <where>
-            <if test="userId !='' || userId != null">
+            <if test="userId !='' and userId != null">
                 c.user_id =#{userId}
-
             </if>
-
             and b.review_status='00'
         </where>
     </select>
@@ -44,15 +42,36 @@
 
 
     <!-- 审核账单       -->
-    <update id="updateReviewStatus" parameterType="reviewInfo">
+    <update id="updateReviewStatus" parameterType="reviewBillingReq">
 
         update review_info a
         <set>
-            a.review_status = ? ,
+            a.review_status = #{reviewStatus} ,a.review_time = now(),
+        <if test="rejectionReason != '' and  rejectionReason != null">
+        a.rejection_reason = #{rejectionReason}
+        </if>
         </set>
-        <if test="reviewStatus != '' || reviewStatus != null"></if>
-        a.rejection_reason = ?
-        from review_info a
-        where a.review_id = ? and a.reviewer_id = ?;
+        where a.review_id = #{reviewId} and a.reviewer_id = #{reviewerId} ;
     </update>
+
+
+
+    <!--   通过账单id 获取信息     -->
+    <select id="findReviewInfoById" parameterType="Long" resultMap="reviewMap2">
+        select
+        <include refid="selectAll"/>
+        from review_info where review_id =#{reviewId}
+    </select>
+
+    <resultMap id="reviewMap2" type="reviewInfo">
+        <id column="review_id" property="reviewId" javaType="Long"/>
+        <result column="reviewer_id" property="reviewerId" javaType="Long"/>
+        <result column="billing_id" property="billingId" javaType="Long"/>
+        <result column="review_time" property="reviewTime" javaType="Date"/>
+        <result column="review_status" property="reviewStatus" javaType="String"/>
+        <result column="rejection_reason" property="rejectionReason" javaType="String"/>
+        <result column="create_time" property="createTime" javaType="Date"/>
+        <result column="modify_time" property="modifyTime" javaType="Date"/>
+    </resultMap>
+
 </mapper>

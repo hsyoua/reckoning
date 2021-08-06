@@ -1,6 +1,7 @@
 package cn.yugutou.reckoning.dao.mapper;
 
 import cn.yugutou.reckoning.dao.entity.ReviewInfo;
+import cn.yugutou.reckoning.dto.req.ReviewBillingReq;
 import cn.yugutou.reckoning.dto.resp.ReviewWaitingResp;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -26,6 +27,9 @@ public interface ReviewMapper  {
     List<ReviewWaitingResp>  findReviewWaiting(@Param("userId") Long id);
 
 
-    boolean updateReviewStatus(ReviewInfo reviewInfo);
+    boolean updateReviewStatus(ReviewBillingReq req);
 
+
+
+    ReviewInfo findReviewInfoById(@Param("reviewId") Long id);
 }

@@ -15,4 +15,11 @@ public interface UserBillAssociationMapper {
      * @return
      */
     boolean addUserBillAssociation(List<UserBillAssociation> userBillAssociations);
+
+    /**
+     * 根据账单id修改支付状态
+     * @param association
+     * @return
+     */
+    boolean updateStatusByBillingId(UserBillAssociation association);
 }

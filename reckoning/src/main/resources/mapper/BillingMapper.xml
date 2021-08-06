@@ -41,26 +41,27 @@
     <!--    查询账单详情-->
     <select id="findBillDetail" parameterType="map" resultMap="billDetail">
 
-        SELECT
-            a.billing_id,
-            a.bill_theme,
-            a.amount,
-            a.people_num,
-            a.billing_status,
-            a.allocation_method,
-            a.consumption_notes,
-            a.consumer_address,
-            a.create_user_id,
-            a.dissipate,
-            b.user_id,
-            b.user_participation_type,
-            b.apportioned_amount,
-            b.payment_status
-        FROM
-            billing_info a
-                LEFT JOIN usr_bill_association b ON a.billing_id = b.billing_id  where a.billing_id = #{billingId}
-            and exists (select 1 from usr_bill_association c where c.billing_id =#{billingId}
-            and c.user_id = #{userId})
+        SELECT a.billing_id,
+               a.bill_theme,
+               a.amount,
+               a.people_num,
+               a.billing_status,
+               a.allocation_method,
+               a.consumption_notes,
+               a.consumer_address,
+               a.create_user_id,
+               a.dissipate,
+               b.user_id,
+               b.user_participation_type,
+               b.apportioned_amount,
+               b.payment_status
+        FROM billing_info a
+                 LEFT JOIN usr_bill_association b ON a.billing_id = b.billing_id
+        where a.billing_id = #{billingId}
+          and exists(select 1
+                     from usr_bill_association c
+                     where c.billing_id = #{billingId}
+                       and c.user_id = #{userId})
 
     </select>
     <resultMap id="billDetail" type="queryBillDetailResp">
@@ -83,29 +84,23 @@
     </resultMap>
 
     <select id="queryUserBillingInfo" parameterType="queryBillingInfoReq" resultType="userBillingInfoResp">
-        SELECT
-            bi.billing_id,
-            bi.amount,
-            bi.bill_theme,
-            bi.people_num,
-            bi.billing_status,
-            bi.dissipate
-        FROM
-            billing_info bi
-        WHERE
-            bi.dissipate BETWEEN STR_TO_DATE('2021-06-29 15:30:00','%Y-%m-%d %H:%i:%s') AND STR_TO_DATE('2021-06-30 17:30:00','%Y-%m-%d %H:%i:%s')
+        SELECT bi.billing_id,
+               bi.amount,
+               bi.bill_theme,
+               bi.people_num,
+               bi.billing_status,
+               bi.dissipate
+        FROM billing_info bi
+        WHERE bi.dissipate BETWEEN STR_TO_DATE('2021-06-29 15:30:00', '%Y-%m-%d %H:%i:%s') AND STR_TO_DATE('2021-06-30 17:30:00', '%Y-%m-%d %H:%i:%s')
           AND bi.bill_theme = ?
           AND bi.billing_status = ?
           AND bi.allocation_method = ?
           AND bi.people_num = ?
           AND bi.amount = ?
-          AND EXISTS (
-                SELECT
-                    1
-                FROM
-                    usr_bill_association u
-                WHERE
-                    bi.billing_id = u.billing_id
+          AND EXISTS(
+                SELECT 1
+                FROM usr_bill_association u
+                WHERE bi.billing_id = u.billing_id
                   AND u.user_participation_type = ?
                   AND u.payment_status = ?
                   AND u.apportioned_amount = ?
@@ -113,5 +108,9 @@
             )
     </select>
 
-
+    <update id="updateBillingStatus" parameterType="billingInfo">
+        update billing_info
+        set billing_status = #{billingStatus}
+        where billing_id = #{billingId}
+    </update>
 </mapper>

@@ -21,37 +21,11 @@
     </insert>
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+<update id="updateStatusByBillingId" parameterType="userBill" >
+update usr_bill_association
+set payment_status =#{paymentStatus}
+where  billing_id = ${billingId}
+</update>
 
 
     
