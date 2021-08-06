@@ -100,14 +100,14 @@ public class BillServiceImpl implements BillService {
     }
 
     @Override
-    public List<QueryBillDetailResp> findBillDetail(QueryBillDetailReq req) {
+    public QueryBillDetailResp findBillDetail(QueryBillDetailReq req) {
 
         Long billingId = Long.valueOf(req.getBillingId());
 
         //获取查询信息
-        List<QueryBillDetailResp> billDetails = billingMapper.findBillDetail(req);
-        /*如果查询为0，则用户未参与该账单，无法查询*/
-        if (billDetails.size() == 0) {
+        QueryBillDetailResp billDetails = billingMapper.findBillDetail(req);
+        /*如果查询为null，则用户未参与该账单，无法查询*/
+        if (billDetails == null) {
             throw new CustomException(ResultCode.FIND_BILL_DETAIL_ERROR);
         }
         ;

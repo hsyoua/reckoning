@@ -1,5 +1,6 @@
 package cn.yugutou.reckoning.controller;
 
+import cn.yugutou.reckoning.dto.req.ReviewBillingReq;
 import cn.yugutou.reckoning.dto.req.UpdateUserInfoReq;
 import cn.yugutou.reckoning.dto.resp.ReviewWaitingResp;
 import cn.yugutou.reckoning.service.ReviewService;
@@ -19,6 +20,11 @@ public class ReviewController {
      @Autowired
      private ReviewService reviewService;
 
+    /**
+     * 查询待审核账单列表
+     * @param id
+     * @return
+     */
     @GetMapping (value = "/findReviewListById", produces = "application/json;charset=UTF-8")
     public Result findReviewListById( Long id){
         List<ReviewWaitingResp> reviewWaiting = reviewService.findReviewWaiting(id);
@@ -28,5 +34,17 @@ public class ReviewController {
         }
         return Result.failure();
     }
+
+    /**
+     * 审核账单(待完成)
+     * @param req
+     * @return
+     */
+    @PostMapping (value = "/reviewBilling", produces = "application/json;charset=UTF-8")
+    public Result reviewBillingController(@RequestBody ReviewBillingReq req){
+
+        return null;
+    }
+
 
 }

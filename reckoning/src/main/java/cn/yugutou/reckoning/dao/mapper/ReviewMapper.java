@@ -20,8 +20,12 @@ public interface ReviewMapper  {
 
 
     /**
-     *
+     *查询待审核账单
      * @return
      */
     List<ReviewWaitingResp>  findReviewWaiting(@Param("userId") Long id);
+
+
+    boolean updateReviewStatus(ReviewInfo reviewInfo);
+
 }

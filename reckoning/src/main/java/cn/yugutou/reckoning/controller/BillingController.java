@@ -96,7 +96,7 @@ public class BillingController {
      */
     @PostMapping(value = "/fingBillDetail", produces = "application/json;charset=UTF-8")
     public ResponseEntity fingBillDetail(@RequestBody @Validated QueryBillDetailReq request) {
-        List<QueryBillDetailResp> billDetails = billService.findBillDetail(request);
+        QueryBillDetailResp billDetails = billService.findBillDetail(request);
         Result result = null;
         if (billDetails != null) {
             result = Result.success(billDetails);

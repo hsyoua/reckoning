@@ -4,6 +4,7 @@ import cn.yugutou.reckoning.dao.entity.ReviewInfo;
 import cn.yugutou.reckoning.dao.entity.UsrInfo;
 import cn.yugutou.reckoning.dao.mapper.ReviewMapper;
 import cn.yugutou.reckoning.dao.mapper.UserMapper;
+import cn.yugutou.reckoning.dto.req.ReviewBillingReq;
 import cn.yugutou.reckoning.dto.resp.ReviewWaitingResp;
 import cn.yugutou.reckoning.service.ReviewService;
 import cn.yugutou.reckoning.service.UserService;
@@ -45,5 +46,14 @@ public class ReviewServiceImpl implements ReviewService {
         }
 
         return reviewMapper.findReviewWaiting(id);
+    }
+
+    @Override
+    public boolean updateReviewStatus(ReviewBillingReq req) {
+
+
+
+
+        return false;
     }
 }

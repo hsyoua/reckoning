@@ -26,7 +26,7 @@ public interface BillService {
      * @param req
      * @return
      */
-    List<QueryBillDetailResp> findBillDetail(QueryBillDetailReq req);
+   QueryBillDetailResp findBillDetail(QueryBillDetailReq req);
 
     /**
      * 查询用户账单信息

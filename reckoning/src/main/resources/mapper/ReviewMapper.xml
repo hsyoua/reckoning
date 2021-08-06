@@ -41,4 +41,18 @@
         <result column="bill_theme" property="billTheme" javaType="String"/>
         <result column="dissipate" property="dissipate" javaType="Date"/>
     </resultMap>
+
+
+    <!-- 审核账单       -->
+    <update id="updateReviewStatus" parameterType="reviewInfo">
+
+        update review_info a
+        <set>
+            a.review_status = ? ,
+        </set>
+        <if test="reviewStatus != '' || reviewStatus != null"></if>
+        a.rejection_reason = ?
+        from review_info a
+        where a.review_id = ? and a.reviewer_id = ?;
+    </update>
 </mapper>

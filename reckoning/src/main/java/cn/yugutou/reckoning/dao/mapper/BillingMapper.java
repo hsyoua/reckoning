@@ -31,5 +31,5 @@ public interface BillingMapper {
      * @param req
      * @return
      */
-    List<QueryBillDetailResp> findBillDetail(QueryBillDetailReq req);
+    QueryBillDetailResp findBillDetail(QueryBillDetailReq req);
 }
