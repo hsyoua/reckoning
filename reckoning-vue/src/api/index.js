@@ -27,6 +27,25 @@ const userFound = (param) => {
   })
 }
 
+//用户修改密码接口
+const updatePassword = (param) => {
+  return service({
+    url: '/user/updatePassword',
+    method: 'POST',
+    data: param,
+  })
+}
+
+//用户修改信息接口
+const updateUser = (param) => {
+  return service({
+    url: '/user/updateUser',
+    method: 'POST',
+    data: param,
+  })
+}
+
+
 //新增账单
 const addNewBill = (param) => {
   return service({
@@ -40,7 +59,10 @@ let Api = {
   setNewUser,
   userLogin,
   userFound,
-  addNewBill
+  addNewBill,
+  updatePassword,
+  updateUser,
+  
 }
 
 export default Api;

@@ -40,6 +40,10 @@
         <el-menu-item index="/billingAdd">新增账单</el-menu-item>
         <el-menu-item index="/bill">我的账单</el-menu-item>
       </el-submenu>
+      <el-menu-item index="/userPage">
+        <i class="el-icon-user-solid"></i>
+        <span slot="title">个人中心</span>
+      </el-menu-item>
     </el-menu>
   </div>
 </template>

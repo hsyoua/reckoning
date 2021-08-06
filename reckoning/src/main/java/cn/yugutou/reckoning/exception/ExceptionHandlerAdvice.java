@@ -1,6 +1,6 @@
 package cn.yugutou.reckoning.exception;
 
-import cn.yugutou.reckoning.utils.Result;
+import cn.yugutou.reckoning.common.Result;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;

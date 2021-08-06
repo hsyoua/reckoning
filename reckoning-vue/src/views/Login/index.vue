@@ -44,7 +44,7 @@
           <el-input
             v-model="userForm.userName"
             class="input"
-            placeholder="请输入账号"
+            placeholder="请输入用户名"
           />
         </el-form-item>
         密码
@@ -115,13 +115,6 @@ export default {
         callback();
       }
     };
-    var validatePass = (rule, value, callback) => {
-      if (value === "") {
-        callback(new Error("请输入密码"));
-      } else {
-        callback();
-      }
-    };
     var validateMobile = (rule, value, callback) => {
       let regPhone = /^1[3456789]{1}\d{9}$/;
       if (value === ("" || null)) {
@@ -130,6 +123,13 @@ export default {
         callback(Error("手机号格式错误"));
       }
       callback();
+    };
+    var validatePass = (rule, value, callback) => {
+      if (value === "") {
+        callback(new Error("请输入密码"));
+      } else {
+        callback();
+      }
     };
     var validatePass2 = (rule, value, callback) => {
       if (value === "") {
@@ -155,10 +155,10 @@ export default {
         userRemarks: "",
       },
       rules: {
-        userName: [{ validator: validateUser, trigger: "blur" }],
-        password: [{ validator: validatePass, trigger: "blur" }],
-        mobileNo: [{ validator: validateMobile, trigger: "blur" }],
-        checkPass: [{ validator: validatePass2, trigger: "blur" }],
+        userName: [{ validator: validateUser, required: true, trigger: "blur" }],        
+        mobileNo: [{ validator: validateMobile, required: true, trigger: "blur" }],
+        password: [{ validator: validatePass, required: true, trigger: "blur" }],
+        checkPass: [{ validator: validatePass2, required: true, trigger: "blur" }],
       },
     };
   },
@@ -178,10 +178,10 @@ export default {
             };
             Api.setNewUser(pramars).then((res) => {
               // console.log(res);
-              if (res.data.code === 50001) {
+              if (!(res.data.code === 200)) {
                 this.$message.error(res.message);
               }
-              if (res.data.result) {
+              if (res.data.code === 200) {
                 this.$message({
                   message: "注册成功",
                   type: "success",
@@ -204,7 +204,11 @@ export default {
     },
     //切换登录或注册
     addUser() {
-      this.show = false;
+      if (this.show) {
+        this.show = false;
+      } else {
+        this.show = true;
+      }
     },
     //重置注册信息
     resetForm(formName) {
@@ -213,16 +217,16 @@ export default {
     //用户登录方法
     userGetLogin(val) {
       Api.userLogin(val).then((res) => {
-        // console.log(res);
-        if (res.data.code === 20000) {
-          this.$store.commit("setUserData", res.data);
+        console.log(res);
+        if (res.data.code === 200) {
           this.$message({
             message: "登录成功",
             type: "success",
           });
+          this.$store.commit("setUserData", res.data.data);
           this.$router.push("/home");
         }
-        if (!(res.data.code === 2000)) {
+        if (!(res.data.code === 200)) {
           this.$message({
             message: res.data.message,
             type: "error",
@@ -251,18 +255,18 @@ export default {
 
   .from {
     width: 25%;
-    //height: 230px;
+    // height: 100%;
     background-color: white;
     border-radius: 5px;
-    padding: 40px;
+    padding: 0 40px;
 
     .el-form-item {
       margin-top: 10px;
       margin-bottom: 30px;
 
       ::v-deep .el-input__inner {
-        height: 55px;
-        line-height: 55px;
+        height: 50px;
+        line-height: 50px;
         font-size: 18px;
       }
 
@@ -277,7 +281,7 @@ export default {
 
     .btn {
       margin-top: 10px;
-      height: 55px;
+      height: 50px;
       font-size: 18px;
       width: 100%;
     }
