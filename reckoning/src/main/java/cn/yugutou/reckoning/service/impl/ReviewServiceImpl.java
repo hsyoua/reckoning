@@ -89,7 +89,9 @@ public class ReviewServiceImpl implements ReviewService {
             UserBillAssociation association = new UserBillAssociation();
             association.setBillingId(billingId);
             association.setPaymentStatus("01");
+            log.info("association的值【{}】",association);
             asso = userBillAssociationMapper.updateStatusByBillingId(association);
+
             if (!asso){
                 throw new CustomException(ResultCode.FAILURE);
             }
@@ -98,6 +100,7 @@ public class ReviewServiceImpl implements ReviewService {
         }
         //更新账单表状态
         boolean bill = billingMapper.updateBillingStatus(billingInfo);
+
         boolean review=reviewMapper.updateReviewStatus(req);
 
 

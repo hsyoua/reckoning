@@ -1,5 +1,6 @@
 package cn.yugutou.reckoning.service.impl;
 
+import cn.yugutou.reckoning.common.JWTUtil;
 import cn.yugutou.reckoning.dao.entity.BillingInfo;
 import cn.yugutou.reckoning.dao.entity.ReviewInfo;
 import cn.yugutou.reckoning.dao.entity.UserBillAssociation;
@@ -17,9 +18,11 @@ import cn.yugutou.reckoning.dto.resp.QueryBillingInfoResp;
 import cn.yugutou.reckoning.dto.resp.UserBillingInfoResp;
 import cn.yugutou.reckoning.exception.CustomException;
 import cn.yugutou.reckoning.exception.ResultCode;
+import cn.yugutou.reckoning.interceptor.RequestContext;
 import cn.yugutou.reckoning.service.BillService;
 import cn.yugutou.reckoning.service.UserService;
 import cn.yugutou.reckoning.utils.NumberGenerator;
+import cn.yugutou.reckoning.utils.TokenUtils;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import lombok.extern.slf4j.Slf4j;
@@ -101,11 +104,15 @@ public class BillServiceImpl implements BillService {
 
     @Override
     public QueryBillDetailResp findBillDetail(QueryBillDetailReq req) {
-
-        Long billingId = Long.valueOf(req.getBillingId());
-
+        //TODO: 校验该用户是否参与账单
+        Long userId = req.getUserId();
+        if (!TokenUtils.checkUserId(userId)){
+            req.setUserId(TokenUtils.getUserId());
+        }
         //获取查询信息
         QueryBillDetailResp billDetails = billingMapper.findBillDetail(req);
+
+
         /*如果查询为null，则用户未参与该账单，无法查询*/
         if (billDetails == null) {
             throw new CustomException(ResultCode.FIND_BILL_DETAIL_ERROR);

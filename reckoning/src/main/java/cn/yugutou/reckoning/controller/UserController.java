@@ -6,6 +6,7 @@ import cn.yugutou.reckoning.dto.resp.*;
 import cn.yugutou.reckoning.exception.ResultCode;
 import cn.yugutou.reckoning.common.Result;
 import cn.yugutou.reckoning.service.UserService;
+import cn.yugutou.reckoning.utils.TokenUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -60,6 +61,9 @@ public class UserController {
 
     @GetMapping (value = "/queryUserDetail",produces = "application/json;charset=UTF-8")
     public Result<UsrInfo>  queryUserDetailController( Long id){
+        if (!TokenUtils.checkUserId(id)){
+           id = TokenUtils.getUserId();
+        }
         return userService.queryUserDetail(id);
 
     }
