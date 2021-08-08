@@ -5,6 +5,7 @@ import cn.yugutou.reckoning.exception.CustomException;
 import cn.yugutou.reckoning.exception.ResultCode;
 import cn.yugutou.reckoning.interceptor.RequestContext;
 import com.sun.org.apache.xml.internal.resolver.helpers.PublicId;
+import org.apache.commons.lang.StringUtils;
 
 /**
  *
@@ -12,7 +13,11 @@ import com.sun.org.apache.xml.internal.resolver.helpers.PublicId;
 public class TokenUtils {
 
     public static Long getUserId() {
-        Long userId = Long.valueOf(JWTUtil.getUserId(RequestContext.get()));
+        Long userId =null;
+        if (!StringUtils.isEmpty(JWTUtil.getUserId(RequestContext.get()))){
+
+         userId = Long.valueOf(JWTUtil.getUserId(RequestContext.get()));
+        }
 
         if (userId != null) {
             return userId;

@@ -101,7 +101,8 @@
                bi.dissipate
         FROM billing_info bi
         WHERE
-              bi.bill_theme like  concat('%', #{billTheme}, '%')
+              bi.dissipate between  #{dissipateTimeStart} AND #{dissipateTimeEnd}
+          AND    bi.bill_theme like  concat('%', #{billTheme}, '%')
           AND bi.billing_status = #{billingStatus}
           AND bi.allocation_method = #{allocationMethod}
           AND bi.people_num BETWEEN  #{peopleNumMin} AND #{peopleNumMax}

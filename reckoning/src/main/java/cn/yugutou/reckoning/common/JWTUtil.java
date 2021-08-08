@@ -25,8 +25,11 @@ public class JWTUtil {
      */
     public static String jwtCreate(String userId) {
         try {
+            //过期时间
             Date date = new Date(System.currentTimeMillis() + EXPIRE_TIME);
+            //加密算法
             Algorithm algorithm = Algorithm.HMAC256(SECRET);
+            ///携带userid信息，生成签名
             return JWT.create()
                     .withClaim("userId", userId)
                     .withExpiresAt(date)
@@ -76,7 +79,7 @@ public class JWTUtil {
     public static void main(String[] args) {
         String hello = jwtCreate("1352");
         System.out.println(hello);
-        System.out.println(verify("eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2MjgyMjUwMTcsInVzZXJuYW1lIjoiaGVsbG8ifQ.EXzNbsfuYIvfWxu62PCT9fhDqx8JlpasmfH2Xhh-YSI"));
+        System.out.println(verify(hello));
         System.out.println(getUserId(hello));
 
     }

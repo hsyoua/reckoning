@@ -16,11 +16,11 @@ public class QueryBillingInfoReq implements Serializable {
     //用户ID
     private Long userId;
     //开始消费时间
-   // @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
-    //private String dissipateTimeStart;
-    //结束消费时间
-  //  @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
-   // private String dissipateTimeEnd;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
+    private Date dissipateTimeStart;
+  //  结束消费时间
+  @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
+  private Date dissipateTimeEnd;
     //用户参与类型
     private String userParticipationType;
     //关键字(账单主题)

@@ -1,5 +1,6 @@
 package cn.yugutou.reckoning.dto.resp;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import org.apache.ibatis.type.Alias;
 
@@ -19,5 +20,6 @@ public class UserBillingInfoResp {
     //账单状态
     private String billingStatus;
     //消费时间
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date dissipate;
 }
