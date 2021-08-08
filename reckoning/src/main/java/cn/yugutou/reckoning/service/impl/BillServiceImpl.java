@@ -29,7 +29,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service("BillService")
@@ -120,16 +122,18 @@ public class BillServiceImpl implements BillService {
     public QueryBillingInfoResp queryUserBillingInfo(QueryBillingInfoReq queryBillingInfoReq) {
         Integer pageNo = queryBillingInfoReq.getPageNo();
         Integer pageSize = queryBillingInfoReq.getPageSize();
+
+       // System.out.println("日期："+queryBillingInfoReq.getDissipateTimeStart());
         if (pageSize > 30) {
             throw new CustomException(ResultCode.BILL_PAGESIZE_MAX);
         }
 
-        Page page = PageHelper.startPage(pageNo, pageSize);
-        log.info("queryUserBillingInfo方法的page信息:", page.getPageNum() + page.getPageSize());
+        //Page page = PageHelper.startPage(pageNo, pageSize);
+       // log.info("queryUserBillingInfo方法的page信息:", page.getPageNum() + page.getPageSize());
         List<UserBillingInfoResp> userBillingInfoRespList =  billingMapper.queryUserBillingInfo(queryBillingInfoReq);
         QueryBillingInfoResp queryBillingInfoResp = new QueryBillingInfoResp();
         queryBillingInfoResp.setUserBillingInfo(userBillingInfoRespList);
-        queryBillingInfoResp.setTotals(page.getTotal());
+      //  queryBillingInfoResp.setTotals(page.getTotal());
         return queryBillingInfoResp;
     }
 

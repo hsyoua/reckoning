@@ -77,7 +77,7 @@ public class BillingController {
         return new ResponseEntity(result, HttpStatus.OK);
     }
 
-    //查询用户账单信息(未完成)
+    //查询用户账单信息
     @PostMapping(value = "/queryBilling", produces = "application/json;charset=UTF-8")
     public ResponseEntity<QueryBillingInfoResp> queryBilling(@RequestBody QueryBillingInfoReq queryBillingInfoReq) {
         log.info("controller层queryBilling方法入参值：" + queryBillingInfoReq);

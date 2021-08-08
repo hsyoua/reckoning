@@ -83,7 +83,16 @@
         </collection>
     </resultMap>
 
-    <select id="queryUserBillingInfo" parameterType="queryBillingInfoReq" resultType="userBillingInfoResp">
+    <resultMap id="userBillingInfoRespMap" type="userBillingInfoResp">
+        <id column="billing_id" property="billingId" javaType="Long"/>
+        <result column="amount" property="amount" javaType="BigDecimal"/>
+        <result column="bill_theme" property="billTheme" javaType="String"/>
+        <result column="people_num" property="peopleNum" javaType="Integer"/>
+        <result column="billing_status" property="billingStatus" javaType="String"/>
+        <result column="dissipate" property="dissipate" javaType="Date"/>
+    </resultMap>
+
+    <select id="queryUserBillingInfo" parameterType="queryBillingInfoReq" resultMap="userBillingInfoRespMap">
         SELECT bi.billing_id,
                bi.amount,
                bi.bill_theme,
@@ -91,20 +100,20 @@
                bi.billing_status,
                bi.dissipate
         FROM billing_info bi
-        WHERE bi.dissipate BETWEEN STR_TO_DATE('2021-06-29 15:30:00', '%Y-%m-%d %H:%i:%s') AND STR_TO_DATE('2021-06-30 17:30:00', '%Y-%m-%d %H:%i:%s')
-          AND bi.bill_theme = ?
-          AND bi.billing_status = ?
-          AND bi.allocation_method = ?
-          AND bi.people_num = ?
-          AND bi.amount = ?
+        WHERE
+              bi.bill_theme like  concat('%', #{billTheme}, '%')
+          AND bi.billing_status = #{billingStatus}
+          AND bi.allocation_method = #{allocationMethod}
+          AND bi.people_num BETWEEN  #{peopleNumMin} AND #{peopleNumMax}
+          AND bi.amount BETWEEN  #{amountMin} AND #{amountMax}
           AND EXISTS(
                 SELECT 1
                 FROM usr_bill_association u
                 WHERE bi.billing_id = u.billing_id
-                  AND u.user_participation_type = ?
-                  AND u.payment_status = ?
-                  AND u.apportioned_amount = ?
-                  AND u.billing_id = ?
+                  AND u.user_participation_type = #{userParticipationType}
+                  AND u.payment_status = #{paymentStatus}
+                  AND u.apportioned_amount BETWEEN  #{apportionedAmountMin} AND #{apportionedAmountMax}
+                  AND u.user_id = #{userId}
             )
     </select>
 
