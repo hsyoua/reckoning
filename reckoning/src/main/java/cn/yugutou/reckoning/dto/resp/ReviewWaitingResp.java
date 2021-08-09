@@ -4,22 +4,20 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import org.apache.ibatis.type.Alias;
 
-import java.math.BigDecimal;
+import java.io.Serializable;
 import java.util.Date;
+
+/**
+ *查询待审核列表响应实体类
+ */
 @Data
-@Alias("userBillingInfoResp")
-public class UserBillingInfoResp {
-    //账单ID
+@Alias("reviewWaitingResp")
+public class ReviewWaitingResp implements Serializable {
+
+    private Long reviewId;
     private Long billingId;
-    //金额
-    private BigDecimal amount;
-    //账单主题
     private String billTheme;
-    //人数
-    private Integer peopleNum;
-    //账单状态
-    private String billingStatus;
-    //消费时间
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date dissipate;
+
 }

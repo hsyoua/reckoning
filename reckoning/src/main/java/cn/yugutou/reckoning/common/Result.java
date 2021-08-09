@@ -1,4 +1,4 @@
-package cn.yugutou.reckoning.utils;
+package cn.yugutou.reckoning.common;
 
 import cn.yugutou.reckoning.exception.ResultCode;
 import lombok.Data;

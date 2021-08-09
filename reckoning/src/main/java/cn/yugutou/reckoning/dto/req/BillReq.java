@@ -24,4 +24,7 @@ public class BillReq implements Serializable {
     private Date dissipate;
     private String billTheme;
     private List<UserBillAssociationReq>  userBillAssociationReqs;
+
+    //审核需求，新增审核人id字段
+    private Long reviewerId;
 }

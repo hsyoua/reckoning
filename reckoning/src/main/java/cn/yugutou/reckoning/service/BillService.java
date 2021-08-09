@@ -19,14 +19,14 @@ public interface BillService {
     /**
      * 新增账单用户关联信息
      */
-    boolean addUserBillAssociation(List<UserBillAssociationReq> userBillAssociationReqs, Long billid, BigDecimal amount);
+    Long addUserBillAssociation(List<UserBillAssociationReq> userBillAssociationReqs, Long billid, BigDecimal amount);
 
     /**
      * 查询账单详细信息
      * @param req
      * @return
      */
-    List<QueryBillDetailResp> findBillDetail(QueryBillDetailReq req);
+   QueryBillDetailResp findBillDetail(QueryBillDetailReq req);
 
     /**
      * 查询用户账单信息

@@ -41,26 +41,27 @@
     <!--    查询账单详情-->
     <select id="findBillDetail" parameterType="map" resultMap="billDetail">
 
-        SELECT
-            a.billing_id,
-            a.bill_theme,
-            a.amount,
-            a.people_num,
-            a.billing_status,
-            a.allocation_method,
-            a.consumption_notes,
-            a.consumer_address,
-            a.create_user_id,
-            a.dissipate,
-            b.user_id,
-            b.user_participation_type,
-            b.apportioned_amount,
-            b.payment_status
-        FROM
-            billing_info a
-                LEFT JOIN usr_bill_association b ON a.billing_id = b.billing_id  where a.billing_id = #{billingId}
-            and exists (select 1 from usr_bill_association c where c.billing_id =#{billingId}
-            and c.user_id = #{userId})
+        SELECT a.billing_id,
+               a.bill_theme,
+               a.amount,
+               a.people_num,
+               a.billing_status,
+               a.allocation_method,
+               a.consumption_notes,
+               a.consumer_address,
+               a.create_user_id,
+               a.dissipate,
+               b.user_id,
+               b.user_participation_type,
+               b.apportioned_amount,
+               b.payment_status
+        FROM billing_info a
+                 LEFT JOIN usr_bill_association b ON a.billing_id = b.billing_id
+        where a.billing_id = #{billingId}
+          and exists(select 1
+                     from usr_bill_association c
+                     where c.billing_id = #{billingId}
+                       and c.user_id = #{userId})
 
     </select>
     <resultMap id="billDetail" type="queryBillDetailResp">
@@ -82,7 +83,44 @@
         </collection>
     </resultMap>
 
-    <select id="queryUserBillingInfo" parameterType="queryBillingInfoReq" resultType="userBillingInfoResp"></select>
+    <resultMap id="userBillingInfoRespMap" type="userBillingInfoResp">
+        <id column="billing_id" property="billingId" javaType="Long"/>
+        <result column="amount" property="amount" javaType="BigDecimal"/>
+        <result column="bill_theme" property="billTheme" javaType="String"/>
+        <result column="people_num" property="peopleNum" javaType="Integer"/>
+        <result column="billing_status" property="billingStatus" javaType="String"/>
+        <result column="dissipate" property="dissipate" javaType="Date"/>
+    </resultMap>
 
+    <select id="queryUserBillingInfo" parameterType="queryBillingInfoReq" resultMap="userBillingInfoRespMap">
+        SELECT bi.billing_id,
+               bi.amount,
+               bi.bill_theme,
+               bi.people_num,
+               bi.billing_status,
+               bi.dissipate
+        FROM billing_info bi
+        WHERE
+              bi.dissipate between  #{dissipateTimeStart} AND #{dissipateTimeEnd}
+          AND    bi.bill_theme like  concat('%', #{billTheme}, '%')
+          AND bi.billing_status = #{billingStatus}
+          AND bi.allocation_method = #{allocationMethod}
+          AND bi.people_num BETWEEN  #{peopleNumMin} AND #{peopleNumMax}
+          AND bi.amount BETWEEN  #{amountMin} AND #{amountMax}
+          AND EXISTS(
+                SELECT 1
+                FROM usr_bill_association u
+                WHERE bi.billing_id = u.billing_id
+                  AND u.user_participation_type = #{userParticipationType}
+                  AND u.payment_status = #{paymentStatus}
+                  AND u.apportioned_amount BETWEEN  #{apportionedAmountMin} AND #{apportionedAmountMax}
+                  AND u.user_id = #{userId}
+            )
+    </select>
 
+    <update id="updateBillingStatus" parameterType="billingInfo">
+        update billing_info
+        set billing_status = #{billingStatus}
+        where billing_id = #{billingId}
+    </update>
 </mapper>

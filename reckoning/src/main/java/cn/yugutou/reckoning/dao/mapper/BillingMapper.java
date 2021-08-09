@@ -31,5 +31,13 @@ public interface BillingMapper {
      * @param req
      * @return
      */
-    List<QueryBillDetailResp> findBillDetail(QueryBillDetailReq req);
+    QueryBillDetailResp findBillDetail(QueryBillDetailReq req);
+
+
+    /**
+     * 通过账单id修改账单状态
+     * @param billingInfo
+     * @return
+     */
+    boolean updateBillingStatus(BillingInfo billingInfo);
 }
