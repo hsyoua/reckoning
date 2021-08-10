@@ -8,8 +8,10 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
- * 日期转换类，java格式转化为sql格式
- */
+ * @author  chenqun
+ * @create  2021/8/8 23:23
+ * @desc  时间类型转换
+ **/
 public class DateUtil {
 
 
