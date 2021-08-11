@@ -50,8 +50,10 @@
                a.consumption_notes,
                a.consumer_address,
                a.create_user_id,
+               (select user_name from usr_info u where  a.create_user_id = u.user_id) create_user_name,
                a.dissipate,
                b.user_id,
+               (select user_name from usr_info u where  b.user_id  = u.user_id) user_name,
                b.user_participation_type,
                b.apportioned_amount,
                b.payment_status
@@ -73,13 +75,15 @@
         <result column="consumption_notes" property="consumptionNotes" javaType="String"/>
         <result column="consumer_address" property="consumerAddress" javaType="String"/>
         <result column="create_user_id" property="createUserId" javaType="Long"/>
+        <result column="create_user_name" property="createUserName" javaType="String"/>
         <result column="dissipate" property="dissipate" javaType="Date"/>
         <result column="bill_theme" property="billTheme" javaType="String"/>
         <collection property="conSumeList" ofType="consumeDetailResp">
             <id column="user_id" property="userId"></id>
-            <id column="user_participation_type" property="userParticipationType"></id>
-            <id column="apportioned_amount" property="apportionedAmount"></id>
-            <id column="payment_status" property="paymentStatus"></id>
+            <result column="user_name" property="userName" ></result>
+            <result column="user_participation_type" property="userParticipationType"></result>
+            <result column="apportioned_amount" property="apportionedAmount"></result>
+            <result column="payment_status" property="paymentStatus"></result>
         </collection>
     </resultMap>
 

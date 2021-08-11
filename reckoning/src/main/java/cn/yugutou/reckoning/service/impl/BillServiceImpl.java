@@ -108,7 +108,7 @@ public class BillServiceImpl implements BillService {
 
     @Override
     public QueryBillDetailResp findBillDetail(QueryBillDetailReq req) {
-        //TODO: 校验该用户是否参与账单
+        //TODO: 校验该用户是否参与账单 注释
         Long userId = req.getUserId();
         if (!TokenUtils.checkUserId(userId)){
             req.setUserId(TokenUtils.getUserId());

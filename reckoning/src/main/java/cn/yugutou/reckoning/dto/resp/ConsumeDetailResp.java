@@ -10,6 +10,7 @@ import java.math.BigDecimal;
 @Alias("consumeDetailResp")
 public class ConsumeDetailResp implements Serializable {
     private Long userId;
+    private String userName;
     private String userParticipationType;
     private BigDecimal apportionedAmount;
     private String paymentStatus;

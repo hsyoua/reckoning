@@ -23,6 +23,7 @@ public class QueryBillDetailResp implements Serializable {
     private String consumptionNotes;
     private String consumerAddress;
     private Long createUserId;
+    private String createUserName;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date dissipate;
 
