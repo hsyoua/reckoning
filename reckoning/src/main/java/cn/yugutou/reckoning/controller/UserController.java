@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpSession;
+
 @RequestMapping("/user")
 @RestController
 @Slf4j
@@ -29,9 +31,9 @@ public class UserController {
     }
 
     @PostMapping(value = "/login",produces = "application/json;charset=UTF-8")
-    public Result<LoginResp> login(@RequestBody @Validated LoginReq loginReq){
+    public Result<LoginResp> login(@RequestBody @Validated LoginReq loginReq, HttpSession session){
         log.info("login request is [{}]",loginReq);
-        LoginResp loginResp = userService.login(loginReq);
+        LoginResp loginResp = userService.login(loginReq,session);
         if(loginResp.getErrorNum()!=null){
             Result result = new Result();
             result.setCode(ResultCode.USER_LOGIN_CHECK_FAIL.getCode());
