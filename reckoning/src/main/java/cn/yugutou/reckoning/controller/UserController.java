@@ -98,6 +98,8 @@ public class UserController {
         boolean send = SMSUtil.send(mobileNo, code);
         if(send){
             session.setAttribute(mobileNo,code);
+            //设置
+            session.setMaxInactiveInterval(60);
             return Result.success();
         }
         return Result.failure();
