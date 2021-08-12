@@ -39,7 +39,7 @@
 
 
     <!--    查询账单详情-->
-    <select id="findBillDetail" parameterType="map" resultMap="billDetail">
+    <select id="findBillDetail" parameterType="queryBillDetailReq" resultMap="billDetail">
 
         SELECT a.billing_id,
                a.bill_theme,

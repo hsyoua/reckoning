@@ -209,4 +209,21 @@ public class UserServiceImpl implements UserService {
 
         return userMapper.updateUserinfoSelf(usrInfo);
     }
+
+    @Override
+    public LoginResp queryUserinfoByPhone(String phone) {
+        UsrInfo usrInfo = userMapper.queryUsrInfoByPhone(phone);
+        //update last login time;
+        userMapper.updateLoginTime(usrInfo.getUserId());
+        LoginResp loginResp = new LoginResp();
+        if (usrInfo!=null){
+
+        BeanUtils.copyProperties(usrInfo, loginResp);
+        loginResp.setToken(JWTUtil.jwtCreate(String.valueOf(usrInfo.getUserId())));
+         return loginResp;
+        }
+        //set token
+
+        return  null;
+    }
 }
