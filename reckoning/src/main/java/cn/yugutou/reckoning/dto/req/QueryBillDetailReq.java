@@ -12,9 +12,9 @@ import java.util.Date;
 @Data
 @Alias("queryBillDetailReq")
 public class QueryBillDetailReq implements Serializable {
-    @NotNull(message = "The userId  mobileNo cannot be empty")
+    @NotNull(message = "The userId   cannot be empty")
     private Long userId;
-    @NotNull(message = "The BillingId  mobileNo cannot be empty")
+    @NotNull(message = "The BillingId   cannot be empty")
     private Long BillingId;
 
 
