@@ -68,6 +68,10 @@ public class UserServiceImpl implements UserService {
             logger.info("user phone already exists");
             throw new CustomException(ResultCode.USER_ALREAD_EXISTS);
         }
+
+
+
+
         return userMapper.saveUser(usrInfo);
     }
 
@@ -207,5 +211,22 @@ public class UserServiceImpl implements UserService {
         BeanUtils.copyProperties(updateUserInfoReq, usrInfo);
 
         return userMapper.updateUserinfoSelf(usrInfo);
+    }
+
+    @Override
+    public LoginResp queryUserinfoByPhone(String phone) {
+        UsrInfo usrInfo = userMapper.queryUsrInfoByPhone(phone);
+        //update last login time;
+        userMapper.updateLoginTime(usrInfo.getUserId());
+        LoginResp loginResp = new LoginResp();
+        if (usrInfo!=null){
+
+        BeanUtils.copyProperties(usrInfo, loginResp);
+        loginResp.setToken(JWTUtil.jwtCreate(String.valueOf(usrInfo.getUserId())));
+         return loginResp;
+        }
+        //set token
+
+        return  null;
     }
 }

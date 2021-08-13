@@ -3,16 +3,20 @@ package cn.yugutou.reckoning.controller;
 import cn.yugutou.reckoning.dao.entity.UsrInfo;
 import cn.yugutou.reckoning.dto.req.*;
 import cn.yugutou.reckoning.dto.resp.*;
+import cn.yugutou.reckoning.exception.CustomException;
 import cn.yugutou.reckoning.exception.ResultCode;
 import cn.yugutou.reckoning.common.Result;
 import cn.yugutou.reckoning.service.UserService;
+import cn.yugutou.reckoning.utils.SMSUtil;
 import cn.yugutou.reckoning.utils.TokenUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
+import java.util.Random;
 
 @RequestMapping("/user")
 @RestController
@@ -24,8 +28,15 @@ public class UserController {
     private UserService userService;
 
     @PostMapping(value = "/register",produces="application/json;charset=UTF-8")
-    public Result<RegisterResp> registerUser(@RequestBody @Validated RegisterReq requset){
+    public Result<RegisterResp> registerUser(@RequestBody @Validated RegisterReq requset,HttpSession session){
         boolean result = userService.registerUser(requset);
+        //验证码注册
+        String inputCode = requset.getCode();
+        String mobileNo = requset.getMobileNo();
+        String sessionCode = (String) session.getAttribute(mobileNo);
+        if (!inputCode.equals(sessionCode)){
+            throw new CustomException(ResultCode.USER_MESSAGE_LOGIN_CHECK);
+        }
         RegisterResp resp = new RegisterResp(result);
         return Result.success(resp);
     }
@@ -79,7 +90,47 @@ public class UserController {
         return Result.failure();
     }
 
+    /**
+     * 获取登录验证码
+     * @param req
+     * @return
+     */
+    @PostMapping (value = "/getLoginMessage",produces = "application/json;charset=UTF-8")
+    public Result  getLoginMessageController(@RequestBody @Validated SendMsgReq req,HttpSession session){
+        //生成六位随机数
+        Random random =new Random();
+        String code =(random.nextInt(900000)+100000)+"";
+       //获取手机号
+        String mobileNo = req.getMobileNo();
+        boolean send = SMSUtil.send(mobileNo, code);
+        if(send){
+            session.setAttribute(mobileNo,code);
+            //设置
+            session.setMaxInactiveInterval(60);
+            return Result.success();
+        }
+        return Result.failure();
+    }
 
+    @PostMapping (value = "/loginByMessage",produces = "application/json;charset=UTF-8")
+    public Result  msgLoginController(@RequestBody @Validated SendMsgReq req,HttpSession session){
+        String mobileNo = req.getMobileNo();
 
+        String inputCode = req.getCode();
+        String sessionCode= (String) session.getAttribute(mobileNo);
+        LoginResp loginResp = userService.queryUserinfoByPhone(mobileNo);
+
+        //1.判断验证码是否正确
+
+        if (!inputCode.equals(sessionCode)){
+           throw new CustomException(ResultCode.USER_MESSAGE_LOGIN_CHECK);
+        }
+        //2.判断手机号是否存在
+        if (loginResp == null){
+            throw  new CustomException(ResultCode.USER_MESSAGE_LOGIN);
+        }
+        return Result.success(loginResp);
+
+    }
 
 }
