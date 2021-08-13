@@ -104,8 +104,10 @@
                bi.billing_status,
                bi.dissipate
         FROM billing_info bi
-        WHERE
-              bi.dissipate between  #{dissipateTimeStart} AND #{dissipateTimeEnd}
+        where 1=1
+              <if test="dissipateTimeStart != null and dissipateTimeEnd !=null ">
+                and   bi.dissipate between  #{dissipateTimeStart} AND #{dissipateTimeEnd}
+              </if>
           AND    bi.bill_theme like  concat('%', #{billTheme}, '%')
           AND bi.billing_status = #{billingStatus}
           AND bi.allocation_method = #{allocationMethod}
@@ -120,6 +122,7 @@
                   AND u.apportioned_amount BETWEEN  #{apportionedAmountMin} AND #{apportionedAmountMax}
                   AND u.user_id = #{userId}
             )
+
     </select>
 
     <update id="updateBillingStatus" parameterType="billingInfo">

@@ -27,6 +27,7 @@ import cn.yugutou.reckoning.utils.TokenUtils;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -131,11 +132,17 @@ public class BillServiceImpl implements BillService {
     public QueryBillingInfoResp queryUserBillingInfo(QueryBillingInfoReq queryBillingInfoReq) {
         Integer pageNo = queryBillingInfoReq.getPageNo();
         Integer pageSize = queryBillingInfoReq.getPageSize();
-        Date dissipateTimeStart = queryBillingInfoReq.getDissipateTimeStart();
-        Date dissipateTimeEnd = queryBillingInfoReq.getDissipateTimeEnd();
-        Timestamp date_start = DateUtil.getSqlTimestamp(dissipateTimeStart);
-        Timestamp date_end = DateUtil.getSqlTimestamp(dissipateTimeEnd);
-        log.info("开始时间 【{}】",date_start);
+        Timestamp date_start = null;
+        Timestamp  date_end =null;
+        Date   dissipateTimeStart = queryBillingInfoReq.getDissipateTimeStart();
+        Date  dissipateTimeEnd = queryBillingInfoReq.getDissipateTimeEnd();
+
+        if (dissipateTimeStart !=null  ){
+         date_start = DateUtil.getSqlTimestamp(dissipateTimeStart);
+        }
+        if (dissipateTimeEnd !=null){
+         date_end = DateUtil.getSqlTimestamp(dissipateTimeEnd);
+        }
         queryBillingInfoReq.setDissipateTimeStart(date_start);
         queryBillingInfoReq.setDissipateTimeEnd(date_end);
 
