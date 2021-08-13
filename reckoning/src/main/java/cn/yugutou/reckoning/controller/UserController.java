@@ -28,8 +28,15 @@ public class UserController {
     private UserService userService;
 
     @PostMapping(value = "/register",produces="application/json;charset=UTF-8")
-    public Result<RegisterResp> registerUser(@RequestBody @Validated RegisterReq requset){
+    public Result<RegisterResp> registerUser(@RequestBody @Validated RegisterReq requset,HttpSession session){
         boolean result = userService.registerUser(requset);
+        //验证码注册
+        String inputCode = requset.getCode();
+        String mobileNo = requset.getMobileNo();
+        String sessionCode = (String) session.getAttribute(mobileNo);
+        if (!inputCode.equals(sessionCode)){
+            throw new CustomException(ResultCode.USER_MESSAGE_LOGIN_CHECK);
+        }
         RegisterResp resp = new RegisterResp(result);
         return Result.success(resp);
     }

@@ -69,6 +69,10 @@ public class UserServiceImpl implements UserService {
             logger.info("user phone already exists");
             throw new CustomException(ResultCode.USER_ALREAD_EXISTS);
         }
+
+
+
+
         return userMapper.saveUser(usrInfo);
     }
 
