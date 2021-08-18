@@ -1,11 +1,16 @@
 import service from '@/service/index'
 
+
+/******************************登录接口*****************************/ 
 //注册接口
 const setNewUser = (param) => {
   return service({
     url: '/user/register',
     method: 'POST',
     data: param,
+    headers: {
+      'Content-Type': 'application/json',
+  },
   })
 }
 
@@ -15,8 +20,26 @@ const userLogin = (param) => {
     url: '/user/login',
     method: 'POST',
     data: param,
+    headers: {
+      'Content-Type': 'application/json',
+  },
   })
 }
+
+//获取公钥
+const getJSEncrypt = (param) => {
+  return service({
+    url: '/key/getPublicKey',
+    method: 'GET',
+    params: param,
+    headers: {
+      'Content-Type': 'application/json',
+  },
+  })
+}
+
+
+/******************************用户接口*****************************/ 
 
 //用户查询接口
 const userFound = (param) => {
@@ -24,6 +47,9 @@ const userFound = (param) => {
     url: '/user/queryUser',
     method: 'POST',
     data: param,
+    headers: {
+      'Content-Type': 'application/json',
+  },
   })
 }
 
@@ -33,6 +59,9 @@ const updatePassword = (param) => {
     url: '/user/updatePassword',
     method: 'POST',
     data: param,
+    headers: {
+      'Content-Type': 'application/json',
+  },
   })
 }
 
@@ -42,9 +71,26 @@ const updateUser = (param) => {
     url: '/user/updateUser',
     method: 'POST',
     data: param,
+    headers: {
+      'Content-Type': 'application/json',
+  },
   })
 }
 
+//用户信息接口
+const queryUserDetail = (param) => {
+  return service({
+    url: '/user/queryUserDetail',
+    method: 'GET',
+    params: param,
+    headers: {
+      'Content-Type': 'application/json',
+  },
+  })
+}
+
+
+/******************************账单接口*****************************/ 
 
 //新增账单
 const addNewBill = (param) => {
@@ -52,8 +98,38 @@ const addNewBill = (param) => {
     url: '/billing/addBill',
     method: 'POST',
     data: param,
+    headers: {
+      'Content-Type': 'application/json',
+  },
   })
 }
+
+//账单信息
+const queryBilling = (param) => {
+  return service({
+    url: '/billing/queryBilling',
+    method: 'POST',
+    data: param,
+    headers: {
+      'Content-Type': 'application/json',
+  },
+  })
+}
+
+
+//账单详情
+const fingBillDetail = (param) => {
+  return service({
+    url: '/billing/fingBillDetail',
+    method: 'POST',
+    data: param,
+    headers: {
+      'Content-Type': 'application/json',
+  },
+  })
+}
+
+
 
 let Api = {
   setNewUser,
@@ -62,7 +138,10 @@ let Api = {
   addNewBill,
   updatePassword,
   updateUser,
-  
+  queryUserDetail,
+  getJSEncrypt,
+  fingBillDetail,
+  queryBilling
 }
 
 export default Api;

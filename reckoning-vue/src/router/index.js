@@ -4,8 +4,7 @@ import login from '../views/Login'
 
 Vue.use(VueRouter)
 
-const routes = [
-  {
+const routes = [{
     path: '/',
     redirect: 'login',
   },
@@ -41,7 +40,7 @@ const routes = [
         component: () => import('@/views/Bill/billingAdd.vue'),
         meta: {
           tiltle: '新增账单',
-          keepAlive:true,
+          keepAlive: true,
         },
       },
       {
@@ -50,7 +49,7 @@ const routes = [
         component: () => import('@/views/UserPage'),
         meta: {
           tiltle: '个人中心',
-          keepAlive:true,
+          keepAlive: true,
         },
       },
     ]
@@ -77,11 +76,12 @@ router.beforeEach((to, from, next) => {
     next();
   } else {
     //非跳转到登录界面时，判断本地存储userData是否为null或空，为空则跳回到登录界面，反之到相应的界面(此时有数据)。
-    let userData = JSON.parse(sessionStorage.getItem('userData'));
-    if (userData === null || userData === '') {
-      next('/login');
-    } else {
+    // let userData = JSON.parse(sessionStorage.getItem('userData'));
+    let token = sessionStorage.getItem('token');
+    if (token) {
       next();
+    } else {
+      next('/login');
     }
   }
 });

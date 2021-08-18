@@ -14,6 +14,10 @@ import './utils'
 
 import store from './store'
 
+// mock
+process.env.NODE_ENV == 'mock' && require('./mock');
+
+
 Vue.config.productionTip = false
 
 new Vue({

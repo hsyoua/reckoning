@@ -1,15 +1,15 @@
 <template>
   <div class="login">
     <img src="@/assets/image/1.jpg" />
-    <div class="from" v-if="show">
+    <div class="from" key="0" v-if="show">
       <h3>欢迎登录</h3>
-      <el-form ref="loginForm" :model="loginForm" :rules="rules">
+      <el-form ref="loginForm" :model="loginForm" :rules="rules1">
         手机号
         <el-form-item prop="mobileNo">
           <el-input
             v-model="loginForm.mobileNo"
             class="input"
-            placeholder="请输入账号"
+            placeholder="请输入手机号"
           />
         </el-form-item>
         密码
@@ -18,9 +18,11 @@
             v-model="loginForm.password"
             class="input"
             placeholder="请输入密码"
-            type="password"
+            :type="pwdType"
             @keyup.enter.native="submitForm('loginForm')"
-          />
+          >
+            <i slot="suffix" class="el-icon-view" @click="showPwd"></i>
+          </el-input>
         </el-form-item>
         <el-form-item>
           <el-button
@@ -30,15 +32,17 @@
             @click="submitForm('loginForm')"
             >登录</el-button
           >
-        </el-form-item>
-        <el-form-item>
-          <el-button bordered class="btn" @click="addUser">注册</el-button>
+          <div class="add-newuser">
+            <el-link type="primary" :underline="false" @click="addUser"
+              >没有账号？点击注册</el-link
+            >
+          </div>
         </el-form-item>
       </el-form>
     </div>
-    <div class="from" v-else>
+    <div class="from" key="1" v-else>
       <h3>欢迎注册</h3>
-      <el-form ref="userForm" :model="userForm" :rules="rules">
+      <el-form ref="userForm" :model="userForm" :rules="rules2">
         用户名
         <el-form-item prop="userName">
           <el-input
@@ -53,16 +57,21 @@
             v-model="userForm.password"
             class="input"
             placeholder="请输入密码"
-            type="password"
-          />
+            :type="pwdType"
+          >
+            <i slot="suffix" class="el-icon-view" @click="showPwd"></i>
+          </el-input>
         </el-form-item>
         确认密码
         <el-form-item prop="checkPass">
           <el-input
-            type="password"
+            :type="pwdType"
             v-model="userForm.checkPass"
             autocomplete="off"
-          ></el-input>
+            placeholder="请确认密码"
+          >
+            <i slot="suffix" class="el-icon-view" @click="showPwd"></i>
+          </el-input>
         </el-form-item>
         手机号
         <el-form-item prop="mobileNo">
@@ -92,11 +101,13 @@
         </el-form-item>
         <el-form-item>
           <el-button bordered class="btn" @click="resetForm('userForm')"
-            >重置</el-button
+            >重置信息</el-button
           >
-        </el-form-item>
-        <el-form-item>
-          <el-button bordered class="btn" @click="addUser()">登录</el-button>
+          <div class="add-newuser">
+            <el-link type="primary" :underline="false" @click="addUser"
+              >已有账号？返回登录</el-link
+            >
+          </div>
         </el-form-item>
       </el-form>
     </div>
@@ -105,6 +116,7 @@
 
 <script>
 import Api from "@/api";
+import JSEncrypt from "jsencrypt/bin/jsencrypt";
 
 export default {
   data() {
@@ -150,16 +162,33 @@ export default {
       userForm: {
         userName: "",
         password: "",
-        checkPass: "",
         mobileNo: "",
         userRemarks: "",
+        checkPass: "",
       },
-      rules: {
-        userName: [{ validator: validateUser, required: true, trigger: "blur" }],        
-        mobileNo: [{ validator: validateMobile, required: true, trigger: "blur" }],
-        password: [{ validator: validatePass, required: true, trigger: "blur" }],
-        checkPass: [{ validator: validatePass2, required: true, trigger: "blur" }],
+      rules1: {
+        mobileNo: [
+          { validator: validateMobile, required: true, trigger: "blur" },
+        ],
+        password: [
+          { validator: validatePass, required: true, trigger: "blur" },
+        ],
       },
+      rules2: {
+        userName: [
+          { validator: validateUser, required: true, trigger: "blur" },
+        ],
+        mobileNo: [
+          { validator: validateMobile, required: true, trigger: "blur" },
+        ],
+        password: [
+          { validator: validatePass, required: true, trigger: "blur" },
+        ],
+        checkPass: [
+          { validator: validatePass2, required: true, trigger: "blur" },
+        ],
+      },
+      pwdType: "password",
     };
   },
   methods: {
@@ -170,14 +199,7 @@ export default {
         if (valid) {
           //用户注册
           if (formName === "userForm") {
-            let pramars = {
-              userName: this.userForm.userName,
-              password: this.userForm.password,
-              mobileNo: this.userForm.mobileNo,
-              userRemarks: this.userForm.userRemarks,
-            };
-            Api.setNewUser(pramars).then((res) => {
-              // console.log(res);
+            Api.setNewUser(this.userForm).then((res) => {
               if (!(res.data.code === 200)) {
                 this.$message.error(res.message);
               }
@@ -188,13 +210,13 @@ export default {
                 });
                 this.loginForm.mobileNo = this.userForm.mobileNo;
                 this.loginForm.password = this.userForm.password;
-                this.userGetLogin(this.loginForm);
+                this.getJSEncrypt(this.loginForm);
               }
             });
           }
           //用户登录
           if (formName === "loginForm") {
-            this.userGetLogin(this.loginForm);
+            this.getJSEncrypt(this.loginForm);
           }
         } else {
           // console.log("error submit!!");
@@ -204,11 +226,7 @@ export default {
     },
     //切换登录或注册
     addUser() {
-      if (this.show) {
-        this.show = false;
-      } else {
-        this.show = true;
-      }
+      this.show = !this.show;
     },
     //重置注册信息
     resetForm(formName) {
@@ -217,14 +235,14 @@ export default {
     //用户登录方法
     userGetLogin(val) {
       Api.userLogin(val).then((res) => {
-        console.log(res);
+        // console.log(res);
         if (res.data.code === 200) {
           this.$message({
             message: "登录成功",
             type: "success",
           });
-          this.$store.commit("setUserData", res.data.data);
-          this.$router.push("/home");
+          this.$store.commit("set_token", res.data.data.token);
+          this.getUserMessage(res.data.data);
         }
         if (!(res.data.code === 200)) {
           this.$message({
@@ -233,6 +251,46 @@ export default {
           });
         }
       });
+    },
+
+    //获取公钥
+    getJSEncrypt(userData) {
+      Api.getJSEncrypt({phone:userData.mobileNo}).then((res) => {
+        if (res.data.code === 200) {
+          let encryptor = new JSEncrypt() // 新建JSEncrypt对象
+          let publicKey = res.data.data;  //获取公钥
+          encryptor.setPublicKey(publicKey) // 设置公钥
+          let Parmas = {
+            mobileNo:userData.mobileNo,
+            password:encryptor.encrypt(userData.password)
+          }
+          this.userGetLogin(Parmas) // 登录接口
+        }
+      });
+    },
+
+    //获取用户信息
+    getUserMessage(pramars) {
+      let id = {
+        id: pramars.userId,
+      };
+      Api.queryUserDetail(id).then((res) => {
+        if (res.data.code === 200) {
+          this.$store.commit("setUserData", res.data.data);
+          this.$router.push("/home");
+        }
+      });
+    },
+
+    //密码是否显示
+    showPwd() {
+      this.pwdType === "password"
+        ? (this.pwdType = "")
+        : (this.pwdType = "password");
+      let e = document.getElementsByClassName("el-icon-view")[0];
+      this.pwdType == ""
+        ? e.setAttribute("style", "color: #409EFF")
+        : e.setAttribute("style", "color: #c0c4cc");
     },
   },
 };
@@ -276,6 +334,12 @@ export default {
 
       ::v-deep .el-form-item__error {
         font-size: 16px;
+      }
+      .add-newuser {
+        text-align: right;
+      }
+      .el-icon-view {
+        line-height: 50px;
       }
     }
 

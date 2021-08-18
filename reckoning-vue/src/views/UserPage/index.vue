@@ -9,42 +9,42 @@
     <div class="user-message">
       <h3>个人信息</h3>
       <el-form
-        ref="userForm"
-        :model="userForm"
+        ref="userData"
+        :model="userData"
         :rules="rules"
         label-width="80px"
       >
         <el-form-item label="用户名" prop="userName">
           <el-input
-            v-model="userForm.userName"
+            v-model="userData.userName"
             class="input"
             placeholder="请输入用户名"
           />
         </el-form-item>
         <el-form-item label="手机号" prop="mobileNo">
           <el-input
-            v-model="userForm.mobileNo"
+            v-model="userData.mobileNo"
             class="input"
             placeholder="请输入手机号"
           />
         </el-form-item>
         <el-form-item label="备注" prop="userRemarks">
           <el-input
-            v-model="userForm.userRemarks"
+            v-model="userData.userRemarks"
             class="input"
             placeholder="请输入备注"
             type="textarea"
           />
         </el-form-item>
         <el-form-item>
-          <el-button bordered class="btn" @click="resetForm('userForm')"
+          <el-button bordered class="btn" @click="resetForm('userData')"
             >重置</el-button
           >
           <el-button
             bordered
             type="primary"
             class="btn"
-            @click="submitForm('userForm')"
+            @click="submitForm('userData')"
             >保存</el-button
           >
         </el-form-item>
@@ -75,7 +75,7 @@ export default {
       callback();
     };
     return {
-      userForm: {
+      userData: {
         userName: "",
         mobileNo: "",
         userRemarks: "",
@@ -83,16 +83,18 @@ export default {
       },
       rules: {
         userName: [
-          { validator: validateUser, required: true, trigger: "blur" },
+          { validator: validateUser, trigger: "blur" },
         ],
         mobileNo: [
-          { validator: validateMobile, required: true, trigger: "blur" },
+          { validator: validateMobile, trigger: "blur" },
         ],
       },
+      disabled: true,
     };
   },
   mounted() {
-    this.userForm = JSON.parse(sessionStorage.getItem("userData"));
+    this.userData = JSON.parse(sessionStorage.getItem("userData"));
+    this.getUserMessage();
   },
   methods: {
     //登录校验
@@ -100,8 +102,8 @@ export default {
       // console.log(formName)
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          console.log(this.userForm);
-          Api.updateUser(this.userForm).then((res) => {
+          console.log(this.userData);
+          Api.updateUser(this.userData).then((res) => {
             if (res.data.code === 200) {
               this.$message({
                 message: "修改信息成功",
@@ -120,6 +122,18 @@ export default {
     resetForm(formName) {
       this.$refs[formName].resetFields();
     },
+    //获取用户信息
+    getUserMessage() {
+      Api.queryUserDetail(this.userData.userId).then((res) => {
+        if (res.data.code === 200) {
+          this.userData = res.data.data;
+        }
+      });
+    },
+    //修改用户信息
+    editMessage() {
+      this.disabled = false;
+    },
   },
 };
 </script>
@@ -127,11 +141,32 @@ export default {
 <style lang="scss" scoped>
 .user {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
+  align-items: center;
   .user-message {
     width: 400px;
-    padding: 20px;
+    // padding: 20px;
     text-align: center;
+    .userMessage {
+      height: 50px;
+      font-size: 18px;
+      line-height: 50px;
+      span {
+        padding: 0 10px;
+      }
+      input {
+        line-height: 26px;
+        font-size: 18px;
+        border: none;
+        background-color: #ffffff;
+      }
+      :focus {
+        outline: 1px solid #afecab;
+      }
+      i {
+        padding: 0 10px;
+      }
+    }
   }
 }
 </style>

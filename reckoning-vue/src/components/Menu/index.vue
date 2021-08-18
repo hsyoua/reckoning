@@ -1,9 +1,7 @@
 <template>
   <div class="menu">
     <el-menu default-active="1" 
-    class="el-menu-vertical-demo" 
-    @open="handleOpen" 
-    @close="handleClose" 
+    class="el-menu-vertical-demo"
     background-color="#545c64" 
     text-color="#fff" 
     active-text-color="#ffd04b" 
@@ -28,7 +26,7 @@
         </el-menu-item-group>
       </el-submenu> -->
       <!-- 固定菜单 -->
-      <el-menu-item index="/home">
+      <el-menu-item index="/home" class="home">
         <i class="el-icon-s-home"></i>
         <span slot="title">首页</span>
       </el-menu-item>
@@ -37,8 +35,8 @@
           <i class="el-icon-edit"></i>
           <span>账单管理</span>
         </template>
-        <el-menu-item index="/billingAdd">新增账单</el-menu-item>
         <el-menu-item index="/bill">我的账单</el-menu-item>
+        <el-menu-item index="/billingAdd">新增账单</el-menu-item>
       </el-submenu>
       <el-menu-item index="/userPage">
         <i class="el-icon-user-solid"></i>
@@ -57,12 +55,6 @@ export default {
     };
   },
   methods: {
-    handleOpen(key, keyPath) {
-      console.log(key, keyPath);
-    },
-    handleClose(key, keyPath) {
-      console.log(key, keyPath);
-    },
   },
 };
 </script>
@@ -79,6 +71,10 @@ export default {
     }
     ::v-deep .el-submenu__title {
       font-size: 18px;
+    }
+    .home{
+      height: 100px;
+      line-height: 100px;
     }
   }
 }
