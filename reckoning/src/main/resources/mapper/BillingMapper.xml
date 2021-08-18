@@ -39,7 +39,7 @@
 
 
     <!--    查询账单详情-->
-    <select id="findBillDetail" parameterType="map" resultMap="billDetail">
+    <select id="findBillDetail" parameterType="queryBillDetailReq" resultMap="billDetail">
 
         SELECT a.billing_id,
                a.bill_theme,
@@ -50,8 +50,10 @@
                a.consumption_notes,
                a.consumer_address,
                a.create_user_id,
+               (select user_name from usr_info u where  a.create_user_id = u.user_id) create_user_name,
                a.dissipate,
                b.user_id,
+               (select user_name from usr_info u where  b.user_id  = u.user_id) user_name,
                b.user_participation_type,
                b.apportioned_amount,
                b.payment_status
@@ -73,13 +75,15 @@
         <result column="consumption_notes" property="consumptionNotes" javaType="String"/>
         <result column="consumer_address" property="consumerAddress" javaType="String"/>
         <result column="create_user_id" property="createUserId" javaType="Long"/>
+        <result column="create_user_name" property="createUserName" javaType="String"/>
         <result column="dissipate" property="dissipate" javaType="Date"/>
         <result column="bill_theme" property="billTheme" javaType="String"/>
         <collection property="conSumeList" ofType="consumeDetailResp">
             <id column="user_id" property="userId"></id>
-            <id column="user_participation_type" property="userParticipationType"></id>
-            <id column="apportioned_amount" property="apportionedAmount"></id>
-            <id column="payment_status" property="paymentStatus"></id>
+            <result column="user_name" property="userName" ></result>
+            <result column="user_participation_type" property="userParticipationType"></result>
+            <result column="apportioned_amount" property="apportionedAmount"></result>
+            <result column="payment_status" property="paymentStatus"></result>
         </collection>
     </resultMap>
 
@@ -100,22 +104,53 @@
                bi.billing_status,
                bi.dissipate
         FROM billing_info bi
-        WHERE
-              bi.dissipate between  #{dissipateTimeStart} AND #{dissipateTimeEnd}
-          AND    bi.bill_theme like  concat('%', #{billTheme}, '%')
-          AND bi.billing_status = #{billingStatus}
-          AND bi.allocation_method = #{allocationMethod}
-          AND bi.people_num BETWEEN  #{peopleNumMin} AND #{peopleNumMax}
-          AND bi.amount BETWEEN  #{amountMin} AND #{amountMax}
+        where 1=1
+              <if test="dissipateTimeStart != null ">
+                AND   bi.dissipate &gt;= #{dissipateTimeStart}
+              </if>
+              <if test="dissipateTimeEnd != null ">
+                AND   bi.dissipate &lt;= #{dissipateTimeEnd}
+              </if>
+              <if test="billTheme != null and billTheme !='' ">
+                AND    bi.bill_theme like  concat('%', #{billTheme}, '%')
+              </if>
+              <if test="billingStatus != null and billingStatus !='' ">
+                 AND bi.billing_status = #{billingStatus}
+              </if>
+              <if test="allocationMethod != null and allocationMethod !='' ">
+                   AND bi.allocation_method = #{allocationMethod}
+              </if>
+        <if test="peopleNumMin != null and peopleNumMin !='' ">
+          AND bi.people_num &gt;= #{peopleNumMin}
+        </if>
+        <if test="peopleNumMax != null and peopleNumMax !='' ">
+            AND bi.people_num &lt;= #{peopleNumMax}
+        </if>
+        <if test="amountMin != null and amountMin !='' ">
+            AND bi.amount &gt;= #{amountMin}
+        </if>
+        <if test="amountMax != null and amountMax !='' ">
+            AND bi.amount &lt;= #{amountMax}
+        </if>
           AND EXISTS(
                 SELECT 1
                 FROM usr_bill_association u
                 WHERE bi.billing_id = u.billing_id
+        <if test="userParticipationType != null and userParticipationType !='' ">
                   AND u.user_participation_type = #{userParticipationType}
+        </if>
+        <if test="paymentStatus != null and paymentStatus !='' ">
                   AND u.payment_status = #{paymentStatus}
-                  AND u.apportioned_amount BETWEEN  #{apportionedAmountMin} AND #{apportionedAmountMax}
+        </if>
+        <if test="apportionedAmountMin != null and apportionedAmountMin !='' ">
+            AND u.apportioned_amount &gt;= #{apportionedAmountMin}
+        </if>
+        <if test="apportionedAmountMax != null and apportionedAmountMax !='' ">
+            AND u.apportioned_amount &lt;= #{apportionedAmountMax}
+        </if>
                   AND u.user_id = #{userId}
             )
+
     </select>
 
     <update id="updateBillingStatus" parameterType="billingInfo">

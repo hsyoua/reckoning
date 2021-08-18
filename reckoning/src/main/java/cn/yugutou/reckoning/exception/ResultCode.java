@@ -37,6 +37,9 @@ public enum ResultCode {
     user_pagesize_max(50106,"查询失败，查询条数最多50条"),
     USER_NOT_EXISTS(50107,"用户不存在!"),
     TOKEN_GET_USERID(50108,"获取用户ID为空"),
+    USER_MESSAGE_LOGIN(50109,"登录失败，用户未注册，请先注册再通过验证码登录！"),
+    USER_MESSAGE_LOGIN_CHECK(50110,"验证码不正确，请重新输入"),
+
     //流程模块错误码 50200~50299
     //账单模块错误码 50300~50399
     BILL_PARAMETER_BE_EMPTY(50300,"Billing participating user information cannot be blank"),

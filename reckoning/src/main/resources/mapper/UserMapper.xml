@@ -9,6 +9,7 @@
         要使用该代码的时候就直接使用<include>标签
         id:为提取的sql代码，取一个id，起标识作用
          -->
+
     <resultMap id="BaseRsultMap" type="cn.yugutou.reckoning.dao.entity.UsrInfo">
         <id column="user_id" property="userId" javaType="Long"/>
         <result column="password" property="password" javaType="String"/>

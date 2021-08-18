@@ -14,7 +14,7 @@ public class WebConfig implements WebMvcConfigurer {
                 // 拦截所有请求
                 .addPathPatterns("/**")
                 //不需要的拦截请求
-                .excludePathPatterns("/user/login","/user/register");
+                .excludePathPatterns("/user/login","/user/register","/key/*","/user/getLoginMessage","/user/loginByMessage");
     }
     // 跨域配置
     @Override
