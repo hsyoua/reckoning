@@ -12,7 +12,7 @@
       <!-- 头像与下拉菜单 -->
       <el-dropdown @command="handleCommand">
         <div class="Avatar-user">
-          <div class="username">{{ userForm.userName }}</div>
+          <div class="username">{{ userData.userName }}</div>
           <el-avatar
             src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"
             :size="60"
@@ -38,24 +38,30 @@
                 v-model="passwordForm.oldPass"
                 class="input"
                 placeholder="请输入旧密码"
-                type="password"
-              />
+                :type="pwdType"
+              >
+                <i slot="suffix" class="el-icon-view" @click="showPwd"></i>
+              </el-input>
             </el-form-item>
             <el-form-item label="新密码" prop="newPass">
               <el-input
                 v-model="passwordForm.newPass"
                 class="input"
                 placeholder="请输入新密码"
-                type="password"
-              />
+                :type="pwdType"
+              >
+                <i slot="suffix" class="el-icon-view" @click="showPwd"></i>
+              </el-input>
             </el-form-item>
             <el-form-item label="确认密码" prop="confirmNesPass">
               <el-input
-                type="password"
                 v-model="passwordForm.confirmNesPass"
                 autocomplete="off"
                 placeholder="请确认新密码"
-              ></el-input>
+                :type="pwdType"
+              >
+                <i slot="suffix" class="el-icon-view" @click="showPwd"></i>
+              </el-input>
             </el-form-item>
             <el-form-item>
               <el-button
@@ -100,7 +106,6 @@ export default {
     return {
       levelList: null,
       dialogVisible: false,
-      userForm: "",
       passwordForm: {
         oldPass: "",
         newPass: "",
@@ -114,13 +119,15 @@ export default {
           { validator: validatePass2, required: true, trigger: "blur" },
         ],
       },
+      userData: "",
+      pwdType: "password",
     };
   },
   created() {
     this.getBreadcrumb();
   },
   mounted() {
-    this.userForm = JSON.parse(sessionStorage.getItem("userData"));
+    this.userData = JSON.parse(sessionStorage.getItem("userData"));
   },
   computed: {},
   //监听路由变化
@@ -129,6 +136,7 @@ export default {
       this.getBreadcrumb();
     },
   },
+
   methods: {
     //获取路由路径生成面包屑
     getBreadcrumb() {
@@ -161,7 +169,7 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          this.passwordForm.userId = this.userForm.userId;
+          this.passwordForm.userId = this.userData.userId;
           Api.updatePassword(this.passwordForm).then((res) => {
             if (res.data.code === 200) {
               this.$message({
@@ -173,6 +181,17 @@ export default {
           });
         }
       });
+    },
+
+    //密码是否显示
+    showPwd() {
+      this.pwdType === "password"
+        ? (this.pwdType = "")
+        : (this.pwdType = "password");
+      let e = document.getElementsByClassName("el-icon-view")[0];
+      this.pwdType == ""
+        ? e.setAttribute("style", "color: #409EFF")
+        : e.setAttribute("style", "color: #c0c4cc");
     },
   },
 };

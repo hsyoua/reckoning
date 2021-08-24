@@ -64,24 +64,21 @@
             <el-form-item
               :prop="'userBillAssociationReqs.' + index + '.userId'"
             >
-              <!-- <el-autocomplete v-model="item.userId" :fetch-suggestions="querySearchAsync" placeholder="请输入用户名" @select="handleSelect">
-              </el-autocomplete> -->
               <el-select
                 v-model="item.userId"
-                clearable
                 filterable
                 remote
-                placeholder="请输入关键词"
+                placeholder="请选择参与用户"
                 :remote-method="remoteMethod"
                 :loading="loading"
                 @change="handleSelect"
                 v-loadmore="loadmore"
               >
                 <el-option
-                  v-for="item in userOptions"
-                  :key="item.userId"
-                  :label="item.userName + '  ' + item.mobileNo"
-                  :value="item.userId"
+                  v-for="users in userOptions"
+                  :key="users.userId"
+                  :label="users.userName + '  ' + users.mobileNo"
+                  :value="users.userId"
                 >
                 </el-option>
               </el-select>
@@ -116,6 +113,20 @@
             </el-form-item>
           </div>
         </el-form-item>
+        <el-form-item label="审批人" prop="reviewerId">
+          <el-select
+            v-model="billFrom.reviewerId"
+            placeholder="请选择审批人"
+            clearable
+          >
+            <el-option
+              v-for="item in options"
+              :key="item.value"
+              :label="item.userName"
+              :value="item.userId"
+            ></el-option>
+          </el-select>
+        </el-form-item>
         <el-form-item class="btn">
           <el-button @click="resetForm('billFrom')">重置</el-button>
           <el-button type="primary" @click="onSubmit('billFrom')"
@@ -142,6 +153,9 @@ export default {
         consumerAddress: "",
         consumptionNotes: "",
         userBillAssociationReqs: [{ userId: "", userParticipationType: "" }],
+        peopleNum: "",
+        createUserId: "",
+        reviewerId: "",
       },
       rules: {
         billTheme: [
@@ -160,29 +174,38 @@ export default {
             trigger: "change",
           },
         ],
-        consumerAddress: [
-          { required: true, message: "请输入消费地址", trigger: "blur" },
-        ],
         userBillAssociationReqs: [
           {
-            userId: [
-              { required: true, message: "请输入参与用户", trigger: "blur" },
-            ],
-            userParticipationType: [
-              { required: true, message: "请选择参与方式", trigger: "blur" },
-            ],
+            userId: {
+              required: true,
+              message: "请选择参与用户",
+              trigger: "blur",
+            },
+
+            userParticipationType: {
+              required: true,
+              message: "请选择参与方式",
+              trigger: "blur",
+            },
           },
+        ],
+        reviewerId: [
+          { required: true, message: "请选择审批人", trigger: "blur" },
         ],
       },
       loading: false,
       userOptions: [],
-      list: [],
       pageSize: 5,
       pageNo: 1,
       pramars: "",
-      userData:'',
+      userData: "",
+      options: [],
     };
   },
+  mounted() {
+    this.userData = JSON.parse(sessionStorage.getItem("userData"));
+  },
+
   methods: {
     //提交表单信息
     onSubmit(formName) {
@@ -191,19 +214,11 @@ export default {
           this.billFrom.dissipate = this.billFrom.dissipate.format(
             "yyyy-MM-dd HH:mm:ss"
           );
-          let billData = {
-            billTheme: this.billFrom.billTheme,
-            amount: this.billFrom.amount,
-            allocationMethod: this.billFrom.allocationMethod,
-            dissipate: this.billFrom.dissipate,
-            consumerAddress: this.billFrom.consumerAddress,
-            consumptionNotes: this.billFrom.consumptionNotes,
-            userBillAssociationReqs: this.billFrom.userBillAssociationReqs,
-            peopleNum: this.billFrom.userBillAssociationReqs.length,
-            createUserId: this.userData.userId,
-          };
+          this.billFrom.createUserId = this.userData.userId;
+          this.billFrom.peopleNum =
+            this.billFrom.userBillAssociationReqs.length;
 
-          Api.addNewBill(billData).then((res) => {
+          Api.addNewBill(this.billFrom).then((res) => {
             this.remoteMethod;
             if (res.data.code === 200) {
               this.$message({
@@ -237,13 +252,17 @@ export default {
       });
     },
     //删除参与者
-    deleteItem(item, index) {
+    deleteItem(val, index) {
+      let obj = {};
+      obj = this.userOptions.find((item) => {
+        //这里的userList就是上面遍历的数据源
+        return item.userId === val; //筛选出匹配数据
+      });
+      this.options.pop(obj);
       this.billFrom.userBillAssociationReqs.splice(index, 1);
     },
-
     //搜索数据并展示
     remoteMethod(query) {
-      console.log(query);
       if (query !== "") {
         this.loading = true;
         setTimeout(() => {
@@ -256,33 +275,32 @@ export default {
           this.loading = false;
         }, 200);
       } else {
-        this.options = [];
+        this.userOptions = [];
       }
     },
-
     //返回选择数据
-    handleSelect(item) {
-      console.log(item);
+    handleSelect(val) {
+      if (this.userData.userId !== val) {
+        let obj = {};
+        obj = this.userOptions.find((item) => {
+          return item.userId === val; //筛选出匹配数据
+        });
+        this.options.push(obj);
+      }
       this.userOptions = [];
     },
-
     //获取用户列表
     getUserList(pramars) {
       Api.userFound(pramars).then((res) => {
-        this.userOptions = res.data.data.userInfoByNamePhone;
+        this.userOptions = res.data.data.userInfoList;
       });
     },
-
     //下划加载
     loadmore() {
       console.log("获取更多院线名称");
       this.pageSize = this.pageSize + 5;
       this.getUserList(this.pramars);
     },
-  },
-  mounted() {
-    this.restaurants = [];
-    this.userData = JSON.parse(sessionStorage.getItem("userData"));
   },
 };
 </script>
@@ -305,7 +323,9 @@ export default {
       width: 100%;
     }
     .billuser {
+      max-height: 300px;
       text-align: center;
+      overflow: auto;
     }
     .billItem {
       display: flex;

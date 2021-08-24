@@ -25,7 +25,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpSession;
-import javax.websocket.Session;
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
@@ -103,7 +102,7 @@ public class UserServiceImpl implements UserService {
         }
         // TODO :加密校验end
          //关闭校验，开关设为1
-         int   switchKey = 2;
+         int   switchKey = 1;
 
         boolean judge ;
         if (switchKey ==1){
